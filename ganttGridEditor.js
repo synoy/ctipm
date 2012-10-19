@@ -117,6 +117,7 @@ GridEditor.prototype.refreshTaskRow = function(task) {
   row.find("[name=code]").val(task.code); 
   row.find("[name=id]").val(task.id);
   row.find("[name=progress]").val(task.progress);
+  row.find("[name=fprogress]").val(task.fprogress);
   row.find("[status]").attr("status", task.status);
 
   row.find("[name=level]").val(task.level);
@@ -124,6 +125,8 @@ GridEditor.prototype.refreshTaskRow = function(task) {
   row.find("[name=start]").val(new Date(task.start).format()).updateOldValue(); // called on dates only because for other field is called on focus event
   row.find("[name=end]").val(new Date(task.end).format()).updateOldValue();
   row.find("[name=depends]").val(task.depends);
+  row.find("[name=full_mes]").val(task.full_mes);
+  row.find("[name=now_mes]").val(task.now_mes);
   row.find(".taskAssigs").html(task.getAssigsString());
 
   //profiler.stop();
@@ -239,7 +242,12 @@ GridEditor.prototype.bindRowEvents = function (task, taskRow) {
         var newEnd = computeEndByDuration(task.start, dur);
         self.master.changeTaskDates(task, task.start, newEnd);
 
-      } else {
+      //} else if (field == "num_mes") {           //to pros8esa egw ayt
+        //taskEditor.find("#progress").val(task.num_mes);//(1-((task.full_mes-task.now_mes)/task.full_mes))*100;
+      
+      }
+      
+      else {
         task[field] = el.val();
       }
       self.master.endTransaction();
@@ -331,7 +339,10 @@ taskRow.find(".edit").click(function() {
   taskEditor.find("#id").val(task.id);
   taskEditor.find("#description").val(task.description);
   taskEditor.find("#code").val(task.code);
-  taskEditor.find("#progress").val(task.progress ? parseFloat(task.progress) : 0);
+  taskEditor.find("#progress").val(task.progress ? parseFloat(task.progress) : 0);         // pi8anon edw na to ka8orisw wste na moy emfanizei kai dekadika
+  taskEditor.find("#fprogress").val(task.fprogress ? parseFloat(task.fprogress) : 0); 
+  taskEditor.find("#full_mes").val(task.full_mes ? parseFloat(task.full_mes) : 0);          //  we while see an xreiazetai 
+  taskEditor.find("#now_mes").val(task.now_mes ? parseFloat(task.now_mes) : 0);
   taskEditor.find("#status").attr("status", task.status);
 
   if (task.startIsMilestone)
@@ -402,6 +413,12 @@ taskRow.find(".edit").click(function() {
       taskEditor.find("#end").val(new Date(computeEndByDuration(start.getTime(), dur)).format());
     });
 
+     taskEditor.find("#now_mes").change(function() {      //an allaksi i timi toy now_mes 8eloume na allaksi kai i proodos tou progress
+     taskEditor.find("#progress").val((1-((taskEditor.find("#full_mes").val()-taskEditor.find("#now_mes").val())/taskEditor.find("#full_mes").val()))*100);
+     
+   //  (1-(($full_mes-$now_mes)/$full_mes))*100
+     });
+
     //bind add assignment
     taskEditor.find("#addAssig").click(function() {
       var assigsTable = taskEditor.find("#assigsTable");
@@ -436,6 +453,9 @@ taskRow.find(".edit").click(function() {
       task.description = taskEditor.find("#description").val();
       task.code = taskEditor.find("#code").val();
       task.progress = parseFloat(taskEditor.find("#progress").val());
+       task.fprogress = parseFloat(taskEditor.find("#fprogress").val());
+      task.full_mes = parseFloat(taskEditor.find("#full_mes").val());    // mporei kai na 8elei float
+      task.now_mes = parseFloat(taskEditor.find("#now_mes").val());
       task.duration = parseInt(taskEditor.find("#duration").val());
       task.startIsMilestone = taskEditor.find("#startIsMilestone").is(":checked");
       task.endIsMilestone = taskEditor.find("#endIsMilestone").is(":checked");  

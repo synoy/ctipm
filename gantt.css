@@ -243,6 +243,10 @@
   position:absolute;
 }
 
+.taskProgress1{      /* gia na emfanizetai kai deyteri mpara */
+  height:5px;
+}
+
 .taskBox .layout.extDep{
   background-image:url(hasExternalDeps.png);
 }

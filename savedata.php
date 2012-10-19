@@ -20,6 +20,7 @@ $code = $_GET["code"];
 $description = $_GET["description"];
 $status = $_GET["status"];
 $progress = $_GET["progress"];
+$fprogress = $_GET["fprogress"];
 $duration = $_GET["duration"];
 $dependence = $_GET["dependence"];
 $level = $_GET["level"];
@@ -27,14 +28,8 @@ $starti = $_GET["starti"];
 $endi = $_GET["endi"];
 $startIsMilestone = $_GET["startIsMilestone"];
 $endIsMilestone = $_GET["endIsMilestone"];
-
-/*
-$fname = $_GET["fname"];
-$size = $_GET["size"];
-$mediaType = $_GET["mediaType"];
-$data = $_GET["data"];
-//$data = 4;
-*/
+$full_mes = $_GET["full_mes"];
+$now_mes = $_GET["now_mes"];
 
   $dob1=trim($starti);//$dob1='dd/mm/yyyy' format
 			list($d, $m, $y) = explode('/', $dob1);
@@ -50,12 +45,24 @@ $data = $_GET["data"];
    if ($id) {
    
    // 8elw na dw ti progress eixe arxika i ergasia (prin to update)
-    $querw ='select progress,level from tasks where id='.$id.' ';
+    $querw ='select progress,level,now_mes from tasks where id='.$id.' ';
     $resultw = mysql_query($querw);
     $linew = mysql_fetch_row($resultw);
+
+//   
+ if ($progress==$linew[0] && ($now_mes!=$linew[2])){
+if (($full_mes!=0) && ($now_mes!=0)) {    //8a valw ton elegxo na ginetai eksw wste na min mporei na exei timi to now_mes enw to full_mes na eina 0
+$progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
+}
+}
+//else{
+//$progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
+//$now_mes = ($full_mes-(1-($progress/100)*$full_mes));
+//}
+   
    
    //ginete to update me ta nea dedomena
-    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , duration="'.$duration.'", depends="'.$dependence.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'" WHERE id='.$id.' ';
+    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , fprogress ="'.$fprogress.'" , duration="'.$duration.'", depends="'.$dependence.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'",full_mes="'.$full_mes.'",now_mes="'.$now_mes.'" WHERE id='.$id.' ';
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
    
@@ -105,70 +112,7 @@ $data = $_GET["data"];
      $result1 = mysql_query($quer1);
    $line1 = mysql_fetch_row($result1);
     }  
-    
-     //   $name = $dbLink->real_escape_string($_FILES['uploaded_file']['name']);
-     //   $mime = $dbLink->real_escape_string($_FILES['uploaded_file']['type']);
-     //   $data = $dbLink->real_escape_string(file_get_contents($_FILES  ['uploaded_file']['tmp_name']));
-     //   $size = intval($_FILES['uploaded_file']['size']);
- 
-/* 
-$fname = $_FILES['fileInput']['name']; 
-$data = $_FILES['fileInput']['tmp_name']; 
-$mediaType = $_FILES['fileInput']['type']; 
-$size = $_FILES['fileInput']['size']; 
-        // Create the SQL query
-        $query = "INSERT INTO file (name, type, size, data, created, from_id) VALUES ('{$fname}', '{$mediaType}', {$size}, '{$data}', NOW(), '{$id}' )";      // argotera prepei na proste8ei kai project_id
-  $resulta = mysql_query($query);
-    $linea = mysql_fetch_row($resulta); 
-    
-  */
-  
-//  if( $_FILES['userfile']['size'] > 0)
-//{ 
 
-
-//if(isset($_GET['upload']) && $_FILES['userfile']['size'] > 0)
-//{ 
-	$fileName = $_FILES['userfile']['name'];
-	$tmpName  = $_FILES['userfile']['tmp_name'];
-	$fileSize = $_FILES['userfile']['size'];
-	$fileType = $_FILES['userfile']['type']; 
- //$id = $_POST["id"]; 
- //  $id = 0;
-	$fp      = fopen($tmpName, 'r');
-	$content = fread($fp, filesize($tmpName));
-	$content = addslashes($content);
-	fclose($fp);
-	
-	if(!get_magic_quotes_gpc())
-	{
-		$fileName = addslashes($fileName);
-	}
-	
-
-	$query = "INSERT INTO upload set name='".$fileName."', size='".$fileSize."', type='".$fileType."', content='".$content."'";
-//	 mysql_query($query) or die('Error, query failed');
-//} 
-
-//$STARTFILE = 1; 
-//	$ONFILE = "userfile";//. $STARTFILE; 
-
-//	if (isset($_FILES["$ONFILE"])) {
-//		$show_warn = savedata1($_FILES["$ONFILE"],$id);
-//	} 
-/*
-     $fp      = fopen($data, 'r');
-	$data1 = fread($fp, filesize($data));
-	$data1 = addslashes($data1);
-	fclose($fp);
-  */
-  
-  /*
-    	$query = "INSERT INTO file set name='".$fname."', size='".$size."', type='".$mediaType."', data='".$data."', created=NOW(), from_id='".$id."' ";
-  // $query = "INSERT INTO file (name, type, size, created, data, from_id) VALUES ('{$fname}', '{$mediaType}', {$size}, NOW(), {$data}, '{$id}' )";      // argotera prepei na proste8ei kai project_id
-  $resulta = mysql_query($query);
-    $linea = mysql_fetch_row($resulta);    
-    */
 ?>
 
  </head>
