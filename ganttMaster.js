@@ -65,7 +65,8 @@ GanttMaster.prototype.init = function(place) {
   place.append(this.editor.element);
 
   //create gantt
-  this.gantt = new Ganttalendar("m", new Date().getTime() - 3600000 * 24 * 2, new Date().getTime() + 3600000 * 24 * 15, this, place.width() * .6);
+  //to zoom "prwto orisma" itan m kai to evala y wste na kanei zoom ana xrono kai na einai pio evanagnwsto
+  this.gantt = new Ganttalendar("y", new Date().getTime() - 3600000 * 24 * 2, new Date().getTime() + 3600000 * 24 * 15, this, place.width() * .6);
 
   //setup splitter
   var splitter = $.splittify.init(place, this.editor.element, this.gantt.element, 40);

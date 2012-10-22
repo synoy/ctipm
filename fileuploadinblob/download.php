@@ -7,14 +7,10 @@
 
 if(isset($_GET['id']))
 {
-	// if id is set then get the file with the id from database
-	
 	include("config.php");
-	
+  
 	$id    = $_GET['id'];
-	$query = "SELECT name, type, size, content " .
-			 "FROM upload WHERE id = '$id'";
-	
+	$query = "SELECT name, type, size, content FROM upload WHERE id = '$id' and readit = 1";
 	$result = mysql_query($query) or die('Error, query failed');
 	list($name, $type, $size, $content) =  mysql_fetch_array($result);
 	

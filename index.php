@@ -10,10 +10,10 @@
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
-$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
 
    while ($line=mysql_fetch_row($result)) {
-$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
 //$asd.=',{"id":-2,"name":"coding","code":"asdasdasd","level":1,"status":"STATUS_ACTIVE","start":1346623200000,"duration":10,"end":1347659999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"description":"","progress":0}';
 //$asd.=',{"id":-3,"name":"gant part","code":"","level":2,"status":"STATUS_ACTIVE","start":1346623200000,"duration":2,"end":1346795999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":""}';
@@ -54,7 +54,7 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
   <script src="ganttDrawer.js"></script>
   <script src="ganttGridEditor.js"></script>
   <script src="ganttMaster.js"></script>
- <script src="myajax.js"></script>
+ <!-- <script src="myajax.js"></script>   Den fainetai na toy leipei -->
 
 </head>
 <body style="background-color: #fff;" >
@@ -67,10 +67,12 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
 <? while ($linew= mysql_fetch_row($result)) {?>
   <option value="<? print $linew[1];?>"><? print $linew[0]; ?></option>
   <? } ?>
+  <option value="full">Σύνοψη Έργων</option>
 </select></div>
  <button id="showr">Περισσότερες Πληροφορίες</button>
   <button id="hidr">Απόκρυψη</button>
-  
+ 
+ <!-- gia na megalwnei kai na mikrainei to box me tis plirofories--> 
 <script>
     $("#showr").click(function () {
      // $(".splitBox1").hide("fast", function () {
@@ -241,7 +243,6 @@ function saveGanttOnServer() {
    alert(errMsg);
    }
    }
-
    });
 }
 
@@ -477,9 +478,12 @@ function saveInLocalStorage() {
     <span class="ganttButtonSeparator"></span>
     <button onclick="$('#workSpace').trigger('deleteCurrentTask.gantt');" class="button textual" title="delete"><span class="teamworkIcon">&cent;</span></button>
       &nbsp; &nbsp; &nbsp; &nbsp;
-      <button onclick="saveGanttOnServer();" class="button first big" title="save">save</button>
     </div></div>
   --></div>
+
+  <!---  <button onclick="saveGanttOnServer();" class="button first big" title="save">save</button> den 8eloume na kanei save me ayto to koumpi -->
+
+
 
   <div class="__template__" type="TASKSEDITHEAD">
   <table class="gdfTable" cellspacing="0" cellpadding="0">
@@ -531,17 +535,18 @@ function saveInLocalStorage() {
 
   <div class="__template__" type="TASKBAR"><!---
   <div class="taskBox" taskId="(#=obj.id#)" >
-    <div class="layout (#=obj.hasExternalDep?'extDep':''#)">
-      <div class="taskStatus" status="(#=obj.status#)"></div> 
+    <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level<2?"#CCDDEE":"#EEFFFF"#); border:(#=obj.level<1?'3px coral solid;':''#)">  
+        <div class="taskLabel"><tr><tr><font color="#006600">(#=obj.progress#)%</font></tr><br><tr><font color="#3300CC">(#=obj.fprogress#)%</font></tr></tr></div>
       <div class="taskProgress1" style="width:(#=obj.progress>100?100:obj.progress#)%; background-color:(#=obj.progress>100?'red':'rgb(153,255,51);'#);"></div>
      <div class="taskProgress"  style="width:(#=obj.fprogress>100?100:obj.fprogress#)%; background-color:(#=obj.fprogress>100?'red':'rgb(53,155,251);'#);"></div>
       <div class="milestone (#=obj.startIsMilestone?'active':''#)" ></div>
-      <div class="taskLabel"></div>
       <div class="milestone end (#=obj.endIsMilestone?'active':''#)" ></div>
     </div>
   </div>
 --> </div>
 
+  <!--- 1 <div class="taskStatus" status="(#=obj.status#)"></div> htan sto Taskbar gia na fainetai i katastasi tis ergasias-->
+  <!--- 2 an 8elw na emfanizetai to pososto vazw (#=obj.progress#)% meta to div -->
 
   <div class="__template__" type="CHANGE_STATUS"><!--
     <div class="taskStatusBox">
@@ -556,10 +561,7 @@ function saveInLocalStorage() {
 
 
 
-  <div class="__template__" type="TASK_EDITOR"  >
-  
-  
-  
+  <div class="__template__" type="TASK_EDITOR">
   <div class="ganttTaskEditor" >
   <table width="100%">
     <tr>
@@ -568,7 +570,7 @@ function saveInLocalStorage() {
          <tr>
          <td><label for="id">Α/Α</label><br><input type="text" name="id" id="id" value="" class="formElements" readonly="readonly"></td>
           <tr></tr>
-            <td>
+          <td>
           <label for="code">κωδικός</label><br><input type="text" name="code" id="code" value="" class="formElements"></td>
            </tr><tr>
             <td><label for="name">Τίτλος</label><br><input type="text" name="name" id="name" value=""  size="35" class="formElements"></td>
@@ -585,18 +587,27 @@ function saveInLocalStorage() {
         <table cellpadding="5">
           <tr>
           <td colspan="2"><label for="status">Κατάσταση</label><br><div id="status" class="taskStatus" status=""></div></td>
-          <tr>
-          <td colspan="2"><label for="progress">Πρόοδος εργασίας</label><br><input type="text" name="progress" id="progress" value="" size="3" class="formElements"></td>
-          <td colspan="2"><label for="fprogress">Οικονομική Πρόοδος</label><br><input type="text" name="fprogress" id="fprogress" value="" size="3" class="formElements"></td> 
-          </tr>
+        
            <tr>
            <td><span onmouseover="ShowText('Message'); return true;" onmouseout="HideText('Message'); return true;" href="javascript:ShowText('Message')">
-           <label>Ποσότητα Ολοκλήρωσης</label></span><br><input type="text" name="full_mes" id="full_mes" value="" size="3" class="formElements">
-           <div  id="Message"  class="boxi">Ποσότητα ολοκλήρωσης ορίζεται το σύνολο της μετρικής που χρησιμοποιούμε π.χ. εργατοώρες, εργατομήνες, χρήματα κ.α.</div>
+           <label>Σύνολο Πόρων</label></span><br><input type="text" name="full_mes" id="full_mes" value="" size="3" class="formElements">
+           <div  id="Message"  class="boxi">Σύνολο Πόρων ορίζεται η συνολική ποσότητα της μετρικής που χρησιμοποιούμε π.χ. εργατοώρες, εργατομήνες κ.α.</div>
            </td>
           <td><span onmouseover="ShowText('Message1'); return true;" onmouseout="HideText('Message1'); return true;" href="javascript:ShowText('Message1')">
-          <label>Ποσότητα έως τώρα</label> <div  id="Message1"  class="boxi">Ποσότητα έως τώρα ορίζεται η τιμή της μετρικής όπως αυτή έχει καθοριστεί έως τώρα</div></span><br><input type="text" name="now_mes" id="now_mes" value="" size="3" class="formElements"></td>
+          <label>Πόροι έως τώρα</label> <div  id="Message1"  class="boxi">Πόροι έως τώρα ορίζεται η τιμή της μετρικής όπως αυτή έχει καθοριστεί έως τώρα</div></span><br><input type="text" name="now_mes" id="now_mes" value="" size="3" class="formElements"></td>
+          <td><label for="progress">Πρόοδος εργασίας</label><br><input type="text" name="progress" id="progress" value="" size="3" class="formElements"></td>
           </tr>
+          
+           <tr>
+           <td><span onmouseover="ShowText('fMessage'); return true;" onmouseout="HideText('fMessage'); return true;" href="javascript:ShowText('fMessage')">
+           <label>Σύνολο Δαπανών</label></span><br><input type="text" name="ffull_mes" id="ffull_mes" value="" size="3" class="formElements">
+           <div  id="fMessage"  class="boxi">Σύνολο Δαπανών ορίζεται το σύνολο των χρημάτων που διατίθενται για την ολοκλήρωση της συγκεκριμένης εργασίας</div>
+           </td>
+          <td><span onmouseover="ShowText('fMessage1'); return true;" onmouseout="HideText('fMessage1'); return true;" href="javascript:ShowText('fMessage1')">
+          <label>Δαπάνες έως τώρα</label> <div  id="fMessage1"  class="boxi">Δαπάνες έως τώρα ορίζεται το σύνολο των χρημάτων τα οποία έχουν δαπανηθεί έως τώρα</div></span><br><input type="text" name="fnow_mes" id="fnow_mes" value="" size="3" class="formElements"></td>
+          <td><label for="fprogress">Οικονομική Πρόοδος</label><br><input type="text" name="fprogress" id="fprogress" value="" size="3" class="formElements"></td> 
+          </tr>
+          
            <tr>
            <td><label for="level">Επίπεδο εργασίας</label><br><input type="text" name="level" id="level" value="" size="3" class="formElements"></td>
           <td><label for="dependence">Συσχέτιση με εργασία</label><br><input type="text" name="dependence" id="dependence" value="" size="3" class="formElements"></td>
@@ -613,32 +624,9 @@ function saveInLocalStorage() {
     
     
     </table>
- 
-
-
-
 
 <table cellpadding="10" cellspacing="0" width="100%" border="0" align="center">
 
-<!--- <tr><td align="center">   -->
-<?php
-/*
-// select records from database if exists to display
-$query1 = "SELECT id, name FROM upload content_id='".$content_id."'";
-$result1 = mysql_query($query1) or die('Error, qufery failed');
-if(mysql_num_rows($result1)>0)
-{
-	while(list($id, $name) = mysql_fetch_array($result1))
-	{
-  */
-	?>
-<!---		<a href="download.php?id=<?php// echo $id;?>"><?php// echo $name;?></a> <br>   -->
-		
-	<?php
-//	}
-//}
-?>
-<!--- </td></tr>    -->
 
 <tr><td>
   <!--  <form enctype='multipart/form-data' name='frmupload' action='' method='POST'>  -->
@@ -656,8 +644,8 @@ if(mysql_num_rows($result1)>0)
   <table  cellspacing="1" cellpadding="0" width="100%" id="assigsTable">
    <h2>Ανατεθειμένο σε:</h2>
     <tr>
-      <th style="width:100px;">name</th>
-      <th style="width:70px;">role</th>
+      <th style="width:100px;">Όνομα</th>
+      <th style="width:70px;">Ιδιότητα</th>
       <th style="width:30px;">est.wklg.</th>
       <th style="width:30px;" id="addAssig"><span class="teamworkIcon" style="cursor: pointer">+</span></th>
     </tr>
@@ -666,7 +654,7 @@ if(mysql_num_rows($result1)>0)
   </div> 
   </table> 
    </form>
-  </div>
+  </div
 <!--  </form>   -->
 
       
@@ -745,55 +733,8 @@ var starti = document.getElementById("start").value;
 var endi = document.getElementById("end").value; 
 var full_mes = document.getElementById("full_mes").value; 
 var now_mes = document.getElementById("now_mes").value; 
-
-
-//var fileName1 = "<?php echo $_FILES['userfile'];?>";//['name'];?>";
-//var tmpName = "<?php echo $_FILES['userfile']['tmp_name'];?>";
-//var fileSize = "<?php echo $_FILES['userfile']['size'];?>";
-//var fileType = "<?php echo $_FILES['userfile']['type'];?>";
-
-
- /*
-var fileInput = document.getElementById("userfile"); 
-
- for (var i = 0; i < fileInput.files.length; i++) {
-var file = fileInput.files[i];
-}
-
-                    
-var fname = file.name;
-var size = file.size;
-var mediaType = file.type;  
-
-var blob = file; 
-     var data1 = new FileReader(); 
-     var data = new FileReader(); 
-     // reader.onloadend = onloadendHandler;
-    //  data1.readAsDataURL(blob);
-      
-      data1.onload = function (e){var data = e.target.result};
-      data1.readAsDataURL(blob);
-      
-      
-      */
-      
- // var data = data1.target.result;
- //   var data = data1["result"];
- //   alert(data);
-//var data = file.getAsText("utf-8");
- 
-//var data = file.datablob;
-  
-//var data = new Blob();
- 
-
- // var data = <?=$tmp_name;?>
- //              alert(data);
-
-//var data = blob.slice(0);                   
-//var data =readAsBinaryString(blob);                 
-
-  
+var ffull_mes = document.getElementById("ffull_mes").value; 
+var fnow_mes = document.getElementById("fnow_mes").value; 
 var startIsMilestone;
 var endIsMilestone;
 
@@ -824,7 +765,7 @@ endIsMilestone='false';
      
     }
   }    
-xmlhttp.open("GET","savedata.php?name="+name+"&code="+code+"&id="+id+"&description="+description+"&status="+status+"&progress="+progress+"&fprogress="+fprogress+"&duration="+duration+"&dependence="+dependence+"&starti="+starti+"&endi="+endi+"&level="+level+"&startIsMilestone="+startIsMilestone+"&endIsMilestone="+endIsMilestone+"&full_mes="+full_mes+"&now_mes="+now_mes,true);//+"&fname="+fname+"&size="+size+"&mediaType="+mediaType+"&data="+data,true);
+xmlhttp.open("GET","savedata.php?name="+name+"&code="+code+"&id="+id+"&description="+description+"&status="+status+"&progress="+progress+"&fprogress="+fprogress+"&duration="+duration+"&dependence="+dependence+"&starti="+starti+"&endi="+endi+"&level="+level+"&startIsMilestone="+startIsMilestone+"&endIsMilestone="+endIsMilestone+"&full_mes="+full_mes+"&now_mes="+now_mes+"&ffull_mes="+ffull_mes+"&fnow_mes="+fnow_mes,true);//+"&fname="+fname+"&size="+size+"&mediaType="+mediaType+"&data="+data,true);
 xmlhttp.send();
  //var tmp    = document.forms[0];
 //tmp.submit();

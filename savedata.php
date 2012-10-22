@@ -30,6 +30,8 @@ $startIsMilestone = $_GET["startIsMilestone"];
 $endIsMilestone = $_GET["endIsMilestone"];
 $full_mes = $_GET["full_mes"];
 $now_mes = $_GET["now_mes"];
+$ffull_mes = $_GET["ffull_mes"];
+$fnow_mes = $_GET["fnow_mes"];
 
   $dob1=trim($starti);//$dob1='dd/mm/yyyy' format
 			list($d, $m, $y) = explode('/', $dob1);
@@ -50,7 +52,7 @@ $now_mes = $_GET["now_mes"];
     $linew = mysql_fetch_row($resultw);
 
 //   
- if ($progress==$linew[0] && ($now_mes!=$linew[2])){
+if ($progress==$linew[0] && ($now_mes!=$linew[2])){
 if (($full_mes!=0) && ($now_mes!=0)) {    //8a valw ton elegxo na ginetai eksw wste na min mporei na exei timi to now_mes enw to full_mes na eina 0
 $progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
 }
@@ -62,7 +64,7 @@ $progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
    
    
    //ginete to update me ta nea dedomena
-    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , fprogress ="'.$fprogress.'" , duration="'.$duration.'", depends="'.$dependence.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'",full_mes="'.$full_mes.'",now_mes="'.$now_mes.'" WHERE id='.$id.' ';
+    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , fprogress ="'.$fprogress.'" , duration="'.$duration.'", depends="'.$dependence.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'",full_mes="'.$full_mes.'",now_mes="'.$now_mes.'",ffull_mes="'.$ffull_mes.'",fnow_mes="'.$fnow_mes.'" WHERE id='.$id.' ';
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
    
@@ -72,7 +74,10 @@ $progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
     $line1 = mysql_fetch_row($result1); 
     
  //   for ($i=0;$i=$linew[1]; $i++) {        //
- 
+
+
+/* 
+ //gia na ayksanetai to pososto oloklirwseis twn parrent ergasiwn
  while ($linew[1])
   {
     //vriskw to progress toy paketoy ergasiwn prin
@@ -99,14 +104,17 @@ $progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
     $line = mysql_fetch_row($result);
     $progress = $upprogress;
     
-  /*  $querw ='select progress from tasks where id='.$line1[0].' ';  //
-    $resultw = mysql_query($querw);
-    $linew = mysql_fetch_row($resultw);    */
+  // $querw ='select progress from tasks where id='.$line1[0].' ';  //
+  //  $resultw = mysql_query($querw);
+  //  $linew = mysql_fetch_row($resultw);  
     
-     $quer1 ='select parent,count(parent) from tasks where parent = (select parent from tasks where id='.$line1[0].') ';    //
+     $quer1 ='select parent,count(parent) from tasks where parent = (select parent from tasks where id='.$line1[0].') ';  
     $result1 = mysql_query($quer1);
     $line1 = mysql_fetch_row($result1); 
     }
+ */   
+    
+    
     }else{
    $quer1 ="INSERT INTO tasks (name, description, progress, duration, depends, start, end, level) VALUES ('$name','$description', '$progress', '$duration', '$depends', '$start', '$end', '$level')";
      $result1 = mysql_query($quer1);

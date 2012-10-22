@@ -31,9 +31,9 @@ if(isset($_POST['upload']) && $_FILES['userfile']['size'] > 0)
 	}
 	
 
-	$query = "INSERT INTO upload set name='".$fileName."', size='".$fileSize."', type='".$fileType."', content='".$content."', content_id='".$content_id."'";
+	$query = "INSERT INTO upload set name='".$fileName."', size='".$fileSize."', type='".$fileType."', content='".$content."', content_id='".$content_id."', readit = 1";
 	mysql_query($query) or die('Error, query failed');
-	echo "<br>File $fileName uploaded<br>";
+	echo "<br>Προστέθηκε το αρχείο $fileName <br>";
 }
 
 
@@ -44,15 +44,15 @@ if(isset($_POST['upload']) && $_FILES['userfile']['size'] > 0)
 <tr><td align="center">
 <?php
 // select records from database if exists to display
-$query1 = "SELECT id, name FROM upload where content_id='".$content_id."'";
+$query1 = "SELECT id, name FROM upload where content_id='".$content_id."' and readit = '1' ";
 $result1 = mysql_query($query1) or die('Error, query failed');
 if(mysql_num_rows($result1)>0)
 {
 	while(list($id, $name) = mysql_fetch_array($result1))
 	{
 	?>  
-		<a href="download.php?id=<?php echo $id;?>"><?php echo $name;?></a> <br>
-		
+		<a href="download.php?id=<?php echo $id;?>"><?php echo $name;?></a> 
+     <a  href="#" onclick="deletefile(<? print $id?>)" ><img src="trash.gif" border="0" alt="Διαγραφή"></a><br>
 	<?php
 	}
 } else {
@@ -69,12 +69,35 @@ print "Δεν υπάρχουν διαθέσιμα αρχεία";
 	<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 	<input name="userfile" type="file" id="userfile">
 	</td>
-	<td width="80"><input name="upload" type="submit" class="box" id="upload" value=" Επιφόρτωση αρχείου "></td>
+	<td width="80"><input name="upload" type="submit" class="box" id="upload" value=" Μεταφόρτωση αρχείου "></td>
 	</tr>
 	</table>
 	</form>
 </td></tr>
 </table>
+  
+  <script type="text/javascript">
+function deletefile(el){
 
+var xmlhttp;
+var id =el; 
+// alert(id);
+    if (window.XMLHttpRequest) {
+      xmlhttp=new XMLHttpRequest();
+    }
+    else {
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");     
+   }
+
+   xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+      document.getElementById("userfile").innerHTML=xmlhttp.responseText;
+    }
+  }    
+xmlhttp.open("GET","delete.php?id="+id,true);
+xmlhttp.send();
+setTimeout("location.reload(true);",0);
+}
+</script>
  </head>
 </html>  

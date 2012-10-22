@@ -209,7 +209,7 @@
   border-radius:2px;
   background: #eee; /* Old browsers */
   border:1px solid #bbb;
-}
+}  
 
 .taskBox .taskStatus {
     left:5px;
@@ -262,6 +262,7 @@
   left:-200px;
   width:195px;
   white-space:nowrap;
+  font-size: 10px;
 }
 
 

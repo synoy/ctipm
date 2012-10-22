@@ -127,6 +127,8 @@ GridEditor.prototype.refreshTaskRow = function(task) {
   row.find("[name=depends]").val(task.depends);
   row.find("[name=full_mes]").val(task.full_mes);
   row.find("[name=now_mes]").val(task.now_mes);
+  row.find("[name=ffull_mes]").val(task.ffull_mes);
+  row.find("[name=fnow_mes]").val(task.fnow_mes);
   row.find(".taskAssigs").html(task.getAssigsString());
 
   //profiler.stop();
@@ -343,6 +345,8 @@ taskRow.find(".edit").click(function() {
   taskEditor.find("#fprogress").val(task.fprogress ? parseFloat(task.fprogress) : 0); 
   taskEditor.find("#full_mes").val(task.full_mes ? parseFloat(task.full_mes) : 0);          //  we while see an xreiazetai 
   taskEditor.find("#now_mes").val(task.now_mes ? parseFloat(task.now_mes) : 0);
+  taskEditor.find("#ffull_mes").val(task.ffull_mes ? parseFloat(task.ffull_mes) : 0);       
+  taskEditor.find("#fnow_mes").val(task.fnow_mes ? parseFloat(task.fnow_mes) : 0);
   taskEditor.find("#status").attr("status", task.status);
 
   if (task.startIsMilestone)
@@ -356,7 +360,16 @@ taskRow.find(".edit").click(function() {
 
   taskEditor.find("#level").val(task.level);
   taskEditor.find("#depends").val(task.depends);
-
+  
+  //An i ergasia einai ergo i paketo ergasiwn tote den 8a mporei na kanei edit sta pososta
+  if (task.level<2){
+    taskEditor.find("#full_mes").attr("disabled", "disabled");        //enalaktika 8a mporoysan na einai readonly
+     taskEditor.find("#now_mes").attr("disabled", "disabled");
+      taskEditor.find("#progress").attr("disabled", "readonly");
+      taskEditor.find("#ffull_mes").attr("disabled", "disabled");
+     taskEditor.find("#fnow_mes").attr("disabled", "disabled");
+      taskEditor.find("#fprogress").attr("disabled", "disabled");
+     }
   //make assignments table
   var assigsTable = taskEditor.find("#assigsTable");
   assigsTable.find("[assigId]").remove();
@@ -418,6 +431,10 @@ taskRow.find(".edit").click(function() {
      
    //  (1-(($full_mes-$now_mes)/$full_mes))*100
      });
+     
+       taskEditor.find("#fnow_mes").change(function() {      //an allaksi i timi toy now_mes 8eloume na allaksi kai i proodos tou progress
+     taskEditor.find("#fprogress").val((1-((taskEditor.find("#ffull_mes").val()-taskEditor.find("#fnow_mes").val())/taskEditor.find("#ffull_mes").val()))*100);
+     });
 
     //bind add assignment
     taskEditor.find("#addAssig").click(function() {
@@ -456,6 +473,8 @@ taskRow.find(".edit").click(function() {
        task.fprogress = parseFloat(taskEditor.find("#fprogress").val());
       task.full_mes = parseFloat(taskEditor.find("#full_mes").val());    // mporei kai na 8elei float
       task.now_mes = parseFloat(taskEditor.find("#now_mes").val());
+      task.ffull_mes = parseFloat(taskEditor.find("#ffull_mes").val());    // mporei kai na 8elei float
+      task.fnow_mes = parseFloat(taskEditor.find("#fnow_mes").val());
       task.duration = parseInt(taskEditor.find("#duration").val());
       task.startIsMilestone = taskEditor.find("#startIsMilestone").is(":checked");
       task.endIsMilestone = taskEditor.find("#endIsMilestone").is(":checked");  
@@ -519,7 +538,7 @@ taskRow.find(".edit").click(function() {
     });
   }
 
-  var ndo = createBlackPage(800, 500).append(taskEditor);
+  var ndo = createBlackPage(800, 550).append(taskEditor);
 });
 
 };
