@@ -3,7 +3,9 @@
  $link = mysql_connect("localhost", "root", "5281")
 		or die("Δεν είναι δυνατή η σύνδεση με τη βάση: " . mysql_error());
 	mysql_select_db($db);
-        mysql_query("SET NAMES greek");
+
+   mysql_query("SET NAMES utf8");
+   
 	//return $link;
     
     $quer ="select * from tasks where project_id = 1 ";
@@ -30,13 +32,14 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+ 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>Gantt manager</title>
 
   <link rel=stylesheet href="platform.css" type="text/css">
   <link rel=stylesheet href="libs/dateField/jquery.dateField.css" type="text/css">
-  <link rel=stylesheet href="gantt.css" type="text/css">
+  <link rel=stylesheet href="gantt.css" type="text/css">   
+  <link rel=stylesheet href="jquery.alerts.css" type="text/css">     
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -54,6 +57,7 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
   <script src="ganttDrawer.js"></script>
   <script src="ganttGridEditor.js"></script>
   <script src="ganttMaster.js"></script>
+  <script src="jquery.alerts.js"></script> 
  <!-- <script src="myajax.js"></script>   Den fainetai na toy leipei -->
 
 </head>
@@ -61,35 +65,16 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
 
 <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px">
 <!--- <button onclick="loadGanttFromServer();">Μετάβαση σε έργο</button> Den xreiazetai en teli-->
-<select name="project" onChange="getCurrencyCode('getproject.php?project='+this.value)">
-  <? $result =  mysql_query("select name, project_id from tasks where parent = 0");   ?>
+<!--- <select name="project" onChange="getCurrencyCode('getproject.php?project='+this.value)">
+  <? //$result =  mysql_query("select name, project_id from tasks where parent = 0");   ?>
    <option value="">ΕΠΙΛΕΞΤΕ</option>
-<? while ($linew= mysql_fetch_row($result)) {?>
-  <option value="<? print $linew[1];?>"><? print $linew[0]; ?></option>
-  <? } ?>
+<? //while ($linew= mysql_fetch_row($result)) {?>
+  <option value="<?// print $linew[1];?>"><?// print $linew[0]; ?></option>
+  <?// } ?>
   <option value="full">Σύνοψη Έργων</option>
-</select></div>
- <button id="showr">Περισσότερες Πληροφορίες</button>
-  <button id="hidr">Απόκρυψη</button>
- 
- <!-- gia na megalwnei kai na mikrainei to box me tis plirofories--> 
-<script>
-    $("#showr").click(function () {
-     // $(".splitBox1").hide("fast", function () {
-        // use callee so don't have to name the function
-        //$(this).prev().hide("fast", arguments.callee);
-             $(".splitBox1").animate({width:"878.0909094810486px"}, 700 ); 
-      	$(".splitBox2").animate({width: "826.9090905189514px", left: "883.0909094810486px"}, 700 );
-            $(".vSplitBar").animate({left: "883.0909094810486px"}, 700 );   
-     // });
-    });
-    $("#hidr").click(function () {
-    	$(".splitBox1").animate({width:"308.8888883590698px"}, 500 );
-          	$(".splitBox2").animate({width: "1778.1111116409302px", left: "308.8888883590698px"}, 500 );
-            $(".vSplitBar").animate({left: "308.8888883590698px"}, 500 ); 
-
-    });  
-</script>
+</select> -->
+<!--- <button id="showr">Περισσότερες Πληροφορίες</button>
+  <button id="hidr">Απόκρυψη</button> --></div>
 
 <div id="taZone" style="display:none;"> 
 <!--- <div> -->
@@ -141,13 +126,25 @@ $(function() {
   ge.init(workSpace);
 
   //inject some buttons (for this demo only)
-  $(".ganttButtonBar div").append("<button onclick='clearGantt();' class='button'>Καθαρισμός</button>")
+  $(".ganttButtonBar div")//.append("<button onclick='clearGantt();' class='button'>Καθαρισμός</button>")
           .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
           .append("<button onclick='openResourceEditor();' class='button'>edit resources</button>")
-          .append("<button onclick='getFile();' class='button'>Εξαγωγή αποτελεσμάτων</button>")
+      //    .append("<button onclick='getFile();' class='button'>Εξαγωγή αποτελεσμάτων</button>")
           .append("<button onclick='staffmanage();' class='button'>Διαχείρηση Χρηστών</button>")
-          .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>");
-  $(".ganttButtonBar h1").html("<img src='twGanttSmall.png'>");
+          .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>")
+           .append("<button onclick='dok();' class='button' id='hidr'>Απόκρυψη</button>")
+          .append("<button  onclick='dok();' class='button' id='showr' >Περισσότερες Πληροφορίες</button>")
+          .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <? $result =  mysql_query('select name, project_id from tasks where parent = 0'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
+          .append("<select name='project' class='button' id='propacktask' onChange='getCurrencytaskCode(this.value)'> <option value=''>Επιλέξτε</option></select> ");
+ //  .append("<? $result =  mysql_query('select name, project_id from tasks where parent = 0');   ?> ")
+ //  .append(" <option value=''>ΕΠΙΛΕΞΤΕ</option>  ")
+ //.append(" <? while ($linew= mysql_fetch_row($result)) {?> ")
+ //  .append(" <option value='<? print $linew[1];?>'><? print $linew[0]; ?></option> ")
+ //  .append(" <? } ?> ")
+ //  .append(" <option value='full'>Σύνοψη Έργων</option> ")
+ //  .append(" </select> ");
+ ////$(".ganttButtonBar h1").html("<img src='twGanttSmall.png'>");
+ 
   $(".ganttButtonBar div").addClass('buttons');
   //overwrite with localized ones
   loadI18n();
@@ -459,7 +456,7 @@ function saveInLocalStorage() {
 <div id="gantEditorTemplates" style="display:none;">
   <div class="__template__" type="GANTBUTTONS"><!--
   <div class="ganttButtonBar">
-    <h1 style="float:left">task tree/gantt</h1>
+  
     <div class="buttons">
     <button onclick="$('#workSpace').trigger('undo.gantt');" class="button textual" title="undo"><span class="teamworkIcon">&#39;</span></button>
     <button onclick="$('#workSpace').trigger('redo.gantt');" class="button textual" title="redo"><span class="teamworkIcon">&middot;</span></button>
@@ -481,6 +478,7 @@ function saveInLocalStorage() {
     </div></div>
   --></div>
 
+  <!--- TO esvisa --->
   <!---  <button onclick="saveGanttOnServer();" class="button first big" title="save">save</button> den 8eloume na kanei save me ayto to koumpi -->
 
 
@@ -492,7 +490,7 @@ function saveInLocalStorage() {
       <th class="gdfColHeader" style="width:35px;"></th> 
       <th class="gdfColHeader" style="width:25px;"></th>
       <th class="gdfColHeader gdfResizable" style="width:55px;">κωδικός</th>
-      <th class="gdfColHeader gdfResizable" style="width:200px;">Τίτλος</th>
+      <th class="gdfColHeader gdfResizable" style="width:386px;">Τίτλος</th>
       <th class="gdfColHeader gdfResizable" style="width:80px;">Αρχή</th>
       <th class="gdfColHeader gdfResizable" style="width:80px;">Τέλος</th>
       <th class="gdfColHeader gdfResizable" style="width:65px;">Διάρκεια</th>
@@ -509,7 +507,7 @@ function saveInLocalStorage() {
     <td class="gdfCell" align="center"  onclick='datashow();'><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
     <td class="gdfCell"><input type="text" name="code" value="(#=obj.code?obj.code:''#)"></td>
 
-    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10#)px;"><input type="text" name="name" value="(#=obj.name#)" style="(#=obj.level>0?'border-left:2px dotted orange':''#)"></td>
+    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10#)px;"><input type="text" name="name" value="(#=obj.name#)" style="(#=obj.level>0?'border-left:2px double orange':''#); font-size: (#=17-2*obj.level#)px;"></td>
 
     <td class="gdfCell"><input type="text" name="start"  value="" class="date"></td>
     <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
@@ -590,21 +588,21 @@ function saveInLocalStorage() {
         
            <tr>
            <td><span onmouseover="ShowText('Message'); return true;" onmouseout="HideText('Message'); return true;" href="javascript:ShowText('Message')">
-           <label>Σύνολο Πόρων</label></span><br><input type="text" name="full_mes" id="full_mes" value="" size="3" class="formElements">
+           <label>Σύνολο Πόρων</label></span><br><input type="text" name="full_mes" id="full_mes" value="" size="3" class="formElements" onchange="jalert()">
            <div  id="Message"  class="boxi">Σύνολο Πόρων ορίζεται η συνολική ποσότητα της μετρικής που χρησιμοποιούμε π.χ. εργατοώρες, εργατομήνες κ.α.</div>
            </td>
           <td><span onmouseover="ShowText('Message1'); return true;" onmouseout="HideText('Message1'); return true;" href="javascript:ShowText('Message1')">
-          <label>Πόροι έως τώρα</label> <div  id="Message1"  class="boxi">Πόροι έως τώρα ορίζεται η τιμή της μετρικής όπως αυτή έχει καθοριστεί έως τώρα</div></span><br><input type="text" name="now_mes" id="now_mes" value="" size="3" class="formElements"></td>
+          <label>Πόροι έως τώρα</label> <div  id="Message1"  class="boxi">Πόροι έως τώρα ορίζεται η τιμή της μετρικής όπως αυτή έχει καθοριστεί έως τώρα</div></span><br><input type="text" name="now_mes" id="now_mes" value="" size="3" class="formElements" onchange="jalert()"></td>
           <td><label for="progress">Πρόοδος εργασίας</label><br><input type="text" name="progress" id="progress" value="" size="3" class="formElements"></td>
           </tr>
           
            <tr>
            <td><span onmouseover="ShowText('fMessage'); return true;" onmouseout="HideText('fMessage'); return true;" href="javascript:ShowText('fMessage')">
-           <label>Σύνολο Δαπανών</label></span><br><input type="text" name="ffull_mes" id="ffull_mes" value="" size="3" class="formElements">
+           <label>Σύνολο Δαπανών</label></span><br><input type="text" name="ffull_mes" id="ffull_mes" value="" size="3" class="formElements" onchange="jalert()">
            <div  id="fMessage"  class="boxi">Σύνολο Δαπανών ορίζεται το σύνολο των χρημάτων που διατίθενται για την ολοκλήρωση της συγκεκριμένης εργασίας</div>
            </td>
           <td><span onmouseover="ShowText('fMessage1'); return true;" onmouseout="HideText('fMessage1'); return true;" href="javascript:ShowText('fMessage1')">
-          <label>Δαπάνες έως τώρα</label> <div  id="fMessage1"  class="boxi">Δαπάνες έως τώρα ορίζεται το σύνολο των χρημάτων τα οποία έχουν δαπανηθεί έως τώρα</div></span><br><input type="text" name="fnow_mes" id="fnow_mes" value="" size="3" class="formElements"></td>
+          <label>Δαπάνες έως τώρα</label> <div  id="fMessage1"  class="boxi">Δαπάνες έως τώρα ορίζεται το σύνολο των χρημάτων τα οποία έχουν δαπανηθεί έως τώρα</div></span><br><input type="text" name="fnow_mes" id="fnow_mes" value="" size="3" class="formElements" onchange="jalert()"></td>
           <td><label for="fprogress">Οικονομική Πρόοδος</label><br><input type="text" name="fprogress" id="fprogress" value="" size="3" class="formElements"></td> 
           </tr>
           
@@ -630,7 +628,7 @@ function saveInLocalStorage() {
 
 <tr><td>
   <!--  <form enctype='multipart/form-data' name='frmupload' action='' method='POST'>  -->
-<input name="upload" type="submit" class="box" id="upload" value=" Διαθέσιμα αρχεία " onClick="savefile()">       <!--- "location.href='fileuploadinblob/index.php'" --->
+<input name="upload" type="submit" class="button big" id="upload" value=" Διαθέσιμα αρχεία " onClick="savefile()">       <!--- "location.href='fileuploadinblob/index.php'" --->
 <!--	 </form>     -->
 </td></tr>
 
@@ -704,16 +702,41 @@ function saveInLocalStorage() {
   });
 </script>
 
+<!-- Elegxos tis or8otitas twn timwn> -->
 <script type="text/javascript">
-// function savedata(){
+ function jalert(){
+var full_mes = document.getElementById("full_mes").value; 
+var now_mes = document.getElementById("now_mes").value;
+var ffull_mes = document.getElementById("ffull_mes").value; 
+var fnow_mes = document.getElementById("fnow_mes").value;
+var progress = document.getElementById("progress").value; 
+var fprogress = document.getElementById("fprogress").value; 
 
-// var name = document.getElementById("name").value; 
- // var code = document.getElementById("code").value; 
- //      alert(code);
- //       window.location.href="savedata.php?name="+name+"&code="+code;
- //}
+if (parseFloat(now_mes)>parseFloat(full_mes)) {
+ document.getElementById("now_mes").value = 0;
+ document.getElementById("progress").value = 0; 
+jAlert('Οι "Πόροι εως τώρα" δεν μπορεί να ξεπερνούν το "Σύνολο των Πόρων" ');
+}
 
-</script>    
+if (parseFloat(fnow_mes)>parseFloat(ffull_mes)) {
+document.getElementById("fnow_mes").value = null;
+ document.getElementById("fprogress").value = 0; 
+jAlert('Οι "Δαπάνες εως τώρα" δεν μπορεί να ξεπερνούν το "Σύνολο των Δαπανών" ');
+}
+
+}
+</script>   
+
+<script type="text/javascript">
+function clearcombo(el)
+{
+    for (var i = el.options.length; i >= 0; i--)
+    {
+        el.options[i] = null;
+    }
+    el.selectedIndex = -1;
+} 
+</script> 
 
 <script type="text/javascript">
 function savedata(){
@@ -955,7 +978,7 @@ var id = document.getElementById("id").value;
   window.open('fileuploadinblob/index.php?id='+id,'popuppage', 
       'width=500,toolbar=1,resizable=1,scrollbars=yes,height=300,top=100,left=100'); 
 }
-</script>
+</script> 
 
 
 <!-- oi dyo parakatw synarthshs xrhsimopoioyntai stin periptwsi poy kapoios allaksi project mesw drop down menu, gia na fortwnontai ta antistoixa gantt>  -->
@@ -982,8 +1005,9 @@ function getXMLHTTP() {
 		return xmlhttp;
 	}
 		
-function getCurrencyCode(strURL)
-{		
+function getCurrencyCode(mstrURL)
+{	
+ var 	strURL =  'getproject.php?project='+mstrURL;
 	var req = getXMLHTTP();	
  
 	if (req) 
@@ -1058,6 +1082,27 @@ if(dd.style.display == "none") { dd.style.display = "block"; }
 else { dd.style.display = "none"; }
 }
 //-->
+</script>
+
+<!-- gia na megalwnei kai na mikrainei to box me tis plirofories--> 
+<script type="text/javascript" language="JavaScript">
+function dok(){
+    $("#showr").click(function () {
+     // $(".splitBox1").hide("fast", function () {
+        // use callee so don't have to name the function
+        //$(this).prev().hide("fast", arguments.callee); 
+        $(".splitBox1").animate({width:"878.0909094810486px"}, 700 ); 
+      	$(".splitBox2").animate({width: "826.9090905189514px", left: "883.0909094810486px"}, 700 );
+        $(".vSplitBar").animate({left: "883.0909094810486px"}, 700 );   
+     // });
+       });
+   $("#hidr").click(function () { 
+      $(".splitBox1").animate({width:"308.8888883590698px"}, 500 );
+      $(".splitBox2").animate({width: "1778.1111116409302px", left: "308.8888883590698px"}, 500 );
+      $(".vSplitBar").animate({left: "308.8888883590698px"}, 500 );
+
+  }); 
+    }
 </script>
 
 </body>

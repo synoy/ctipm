@@ -74,7 +74,7 @@
 .splitBox1{
   overflow-x: scroll;
   overflow-y: hidden;
-  width: 878.0909094810486px; 
+  width: 574.1999998092651px; /*878.0909094810486px; */
   left: 0px; 
   /*background-color: yellow;*/
 }
@@ -82,8 +82,8 @@
 .splitBox2 { 
   overflow-x: scroll;
   overflow-y: hidden;
-  width: 826.9090905189514px;
-  left: 883.0909094810486px;
+  width: 921.8000001907349px;/*826.9090905189514px; */
+  left: 579.1999998092651px;/*883.0909094810486px; */
   /*background-color: orange;*/
 }
 
@@ -108,7 +108,7 @@
   cursor: w-resize;
   text-align: center;
   color: white; 
-   left: 883.0909094810486px; 
+   left: 574.1999998092651px;/*883.0909094810486px;  */
 }
 
 .end{

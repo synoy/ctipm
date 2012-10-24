@@ -3,7 +3,7 @@
  $link = mysql_connect("localhost", "root", "5281")
 		or die("Δεν είναι δυνατή η σύνδεση με τη βάση: " . mysql_error());
 	mysql_select_db($db);
-        mysql_query("SET NAMES greek");
+        mysql_query("SET NAMES utf8");
 	//return $link;
 
 $project = $_REQUEST["project"]; 
@@ -13,10 +13,10 @@ if ($project=='full'){
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
-$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
 
    while ($line=mysql_fetch_row($result)) {
-$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
 $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":true }';
 
@@ -25,10 +25,10 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
-$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
 
    while ($line=mysql_fetch_row($result)) {
-$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'"}';
+$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
 $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":true }';
 }

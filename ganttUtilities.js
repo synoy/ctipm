@@ -127,8 +127,8 @@ $.splittify = {
   //  splitterBar.css({left:firstBox.width()});
   //  secondBox.width(w -firstBox.width()-splitterBar.width() ).css({left:firstBox.width() + splitterBar.width()});
   
-  firstBox.width("308.8888883590698px").css({left:0});
-  splitterBar.css({left:"308.8888883590698px"});
+  firstBox.width("655px").css({left:0});     // itan 308.8888883590698 kai to allaksa gia na einai megalitero to para8iro
+  splitterBar.css({left:"655px"});
   secondBox.width(w -firstBox.width()-splitterBar.width() ).css({left:firstBox.width() + splitterBar.width()});
 
 
