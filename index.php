@@ -6,16 +6,32 @@
 
    mysql_query("SET NAMES utf8");
    
+   $proj = $_GET['proj'];
 	//return $link;
-    
-    $quer ="select * from tasks where project_id = 1 ";
+  
+  if ($proj=='full'||$proj==null){
+     $quer ="select * from tasks where parent = 0 and readit = 1";
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
-$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
+$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
 
    while ($line=mysql_fetch_row($result)) {
-$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
+$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
+   }
+$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":true }';
+  }else{
+  // if ($proj==null){
+ //  $proj=2;
+ //  }
+    $quer ="select * from tasks where project_id = $proj and readit = 1";
+    $result = mysql_query($quer);
+    $line = mysql_fetch_row($result);
+    
+$asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
+
+   while ($line=mysql_fetch_row($result)) {
+$asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
 //$asd.=',{"id":-2,"name":"coding","code":"asdasdasd","level":1,"status":"STATUS_ACTIVE","start":1346623200000,"duration":10,"end":1347659999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"description":"","progress":0}';
 //$asd.=',{"id":-3,"name":"gant part","code":"","level":2,"status":"STATUS_ACTIVE","start":1346623200000,"duration":2,"end":1346795999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":""}';
@@ -27,6 +43,7 @@ $asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[2].'","level":'
 
 
 $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":true }';
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -74,7 +91,8 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":true,"canWriteOnParent":
   <option value="full">Σύνοψη Έργων</option>
 </select> -->
 <!--- <button id="showr">Περισσότερες Πληροφορίες</button>
-  <button id="hidr">Απόκρυψη</button> --></div>
+  <button id="hidr">Απόκρυψη</button> -->
+</div>
 
 <div id="taZone" style="display:none;"> 
 <!--- <div> -->
@@ -132,10 +150,10 @@ $(function() {
       //    .append("<button onclick='getFile();' class='button'>Εξαγωγή αποτελεσμάτων</button>")
           .append("<button onclick='staffmanage();' class='button'>Διαχείρηση Χρηστών</button>")
           .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>")
-           .append("<button onclick='dok();' class='button' id='hidr'>Απόκρυψη</button>")
-          .append("<button  onclick='dok();' class='button' id='showr' >Περισσότερες Πληροφορίες</button>")
+           .append("<button onclick='dok();' class='button1' id='hidr'>Απόκρυψη</button>")
+          .append("<button  onclick='dok();' class='button1' id='showr' >Περισσότερες Πληροφορίες</button>")
           .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <? $result =  mysql_query('select name, project_id from tasks where parent = 0'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
-          .append("<select name='project' class='button' id='propacktask' onChange='getCurrencytaskCode(this.value)'> <option value=''>Επιλέξτε</option></select> ");
+          .append("<select name='project' class='button' id='propacktask' onclick='packtaskchange();'> <option value=''>Επιλέξτε</option></select> ");
  //  .append("<? $result =  mysql_query('select name, project_id from tasks where parent = 0');   ?> ")
  //  .append(" <option value=''>ΕΠΙΛΕΞΤΕ</option>  ")
  //.append(" <? while ($linew= mysql_fetch_row($result)) {?> ")
@@ -433,12 +451,12 @@ function loadFromLocalStorage() {
   } else {
     $("#taZone").show();
   }
-  if (!ret || !ret.tasks || ret.tasks.length == 0)
+  if (!ret || !ret.tasks || ret.tasks.length == 0) {
     ret = JSON.parse($("#ta").val());
   ge.loadProject(ret);
   ge.checkpoint(); //empty the undo stack
 }
-
+}
 
 function saveInLocalStorage() {
   var prj = ge.saveProject();
@@ -507,7 +525,7 @@ function saveInLocalStorage() {
     <td class="gdfCell" align="center"  onclick='datashow();'><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
     <td class="gdfCell"><input type="text" name="code" value="(#=obj.code?obj.code:''#)"></td>
 
-    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10#)px;"><input type="text" name="name" value="(#=obj.name#)" style="(#=obj.level>0?'border-left:2px double orange':''#); font-size: (#=17-2*obj.level#)px;"></td>
+    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10#)px;"><a><input type="text" name="name" value="(#=obj.name#)" style="(#=obj.level>0?'border-left:2px double orange':''#); font-size: (#=17-2*obj.level#)px;"></a></td>
 
     <td class="gdfCell"><input type="text" name="start"  value="" class="date"></td>
     <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
@@ -533,8 +551,8 @@ function saveInLocalStorage() {
 
   <div class="__template__" type="TASKBAR"><!---
   <div class="taskBox" taskId="(#=obj.id#)" >
-    <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level<2?"#CCDDEE":"#EEFFFF"#); border:(#=obj.level<1?'3px coral solid;':''#)">  
-        <div class="taskLabel"><tr><tr><font color="#006600">(#=obj.progress#)%</font></tr><br><tr><font color="#3300CC">(#=obj.fprogress#)%</font></tr></tr></div>
+    <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level<2?"#CCDDEE":"#EEFFFF"#); border:(#=obj.level<1?'3px LightSalmon solid;':''#); border-left:(#=obj.full_mes==0?'10px MediumBlue solid;':''#)">  
+        <div class="taskLabel"><tr><tr><font color=(#=obj.full_mes>0?"#006600":"#FFFFFF"#)>(#=obj.progress#)%</font></tr><br><tr><font color="#3300CC">(#=obj.fprogress#)%</font></tr></tr></div>
       <div class="taskProgress1" style="width:(#=obj.progress>100?100:obj.progress#)%; background-color:(#=obj.progress>100?'red':'rgb(153,255,51);'#);"></div>
      <div class="taskProgress"  style="width:(#=obj.fprogress>100?100:obj.fprogress#)%; background-color:(#=obj.fprogress>100?'red':'rgb(53,155,251);'#);"></div>
       <div class="milestone (#=obj.startIsMilestone?'active':''#)" ></div>
@@ -566,10 +584,10 @@ function saveInLocalStorage() {
       <td>
         <table cellpadding="5">
          <tr>
-         <td><label for="id">Α/Α</label><br><input type="text" name="id" id="id" value="" class="formElements" readonly="readonly"></td>
+         <td><label for="κωδικός">Α/Α</label><br><input type="text" name="id" id="id" value="" class="formElements" readonly="readonly"></td>
           <tr></tr>
           <td>
-          <label for="code">κωδικός</label><br><input type="text" name="code" id="code" value="" class="formElements"></td>
+          <label for="code">κωδικός</label><br><input type="text" name="code" id="code" value="" class="formElements"></td>  
            </tr><tr>
             <td><label for="name">Τίτλος</label><br><input type="text" name="name" id="name" value=""  size="35" class="formElements"></td>
           </tr>
@@ -761,6 +779,10 @@ var fnow_mes = document.getElementById("fnow_mes").value;
 var startIsMilestone;
 var endIsMilestone;
 
+//var prosel = document.getElementById("prosel").value;
+//var prosel = this.value;
+//alert(prosel.options[prosel.selectedIndex].value);
+
 if (document.getElementById("startIsMilestone").checked==true){
 startIsMilestone='true';
 } else {
@@ -794,7 +816,9 @@ xmlhttp.send();
 //tmp.submit();
 
 	setTimeout("location.reload(true);",100);   //gia na kanei refresh kai na fainontai oi allages
-  //	setTimeout("loadFromLocalStorage();",400);
+  //	setTimeout("loadFromLocalStorage();",100);
+  
+  // setTimeout("location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);",100);   //to exei parei apo alloy to project_id
 }
 </script>
 
@@ -981,8 +1005,19 @@ var id = document.getElementById("id").value;
 </script> 
 
 
+<script type="text/javascript">
+function packtaskchange(){
+ var pap=window.frames["ifrummy"].window;
+var proj = document.getElementById("prosel").value;
+  
+ pap.location.replace("packtaskchange.php?project="+proj);
+}
+</script>
+
+
+
 <!-- oi dyo parakatw synarthshs xrhsimopoioyntai stin periptwsi poy kapoios allaksi project mesw drop down menu, gia na fortwnontai ta antistoixa gantt>  -->
-<script>
+<script> 
 function getXMLHTTP() { 
 		var xmlhttp=false;	
 		try{
@@ -1004,12 +1039,13 @@ function getXMLHTTP() {
 		 	
 		return xmlhttp;
 	}
+
 		
 function getCurrencyCode(mstrURL)
 {	
  var 	strURL =  'getproject.php?project='+mstrURL;
 	var req = getXMLHTTP();	
- 
+  
 	if (req) 
 	{
 		//function to be called when state is changed
@@ -1025,17 +1061,20 @@ function getCurrencyCode(mstrURL)
           loadGanttFromServer();  // tin kalo edw se periptwsi poy den 8elw koumpi wste na ginei fortwsi twn dedomenwn sta diagrammata gantt
         //   alert(req.responseText);							
 				} 
-				else 
-				{
-					alert("There was a problem while using XMLHTTP:\n" + req.statusText);
-				}
+			//	else 
+			//	{
+			//		alert("There was a problem while using XMLHTTP:\n" + req.statusText);
+			//	}
 			}				
 		 }			
 		 req.open("GET", strURL, true);
 		 req.send(null);
-	}			
-}
-</script>
+	}
+  
+ // setTimeout("location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);",100);
+ location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);				
+} 
+</script> 
 
 <!-- gia na emfanizontai ypodeikseis se pedia poy 8eloun erminia-->
 <script type="text/javascript" language="JavaScript">
@@ -1091,15 +1130,15 @@ function dok(){
      // $(".splitBox1").hide("fast", function () {
         // use callee so don't have to name the function
         //$(this).prev().hide("fast", arguments.callee); 
-        $(".splitBox1").animate({width:"878.0909094810486px"}, 700 ); 
-      	$(".splitBox2").animate({width: "826.9090905189514px", left: "883.0909094810486px"}, 700 );
-        $(".vSplitBar").animate({left: "883.0909094810486px"}, 700 );   
+        $(".splitBox1").animate({width:"1065.091px"}, 700 ); 
+      	$(".splitBox2").animate({width: "666.917px", left: "1071.08px"}, 700 );
+        $(".vSplitBar").animate({left: "1066.08px"}, 700 );   
      // });
        });
    $("#hidr").click(function () { 
       $(".splitBox1").animate({width:"308.8888883590698px"}, 500 );
       $(".splitBox2").animate({width: "1778.1111116409302px", left: "308.8888883590698px"}, 500 );
-      $(".vSplitBar").animate({left: "308.8888883590698px"}, 500 );
+      $(".vSplitBar").animate({left: "303.889px"}, 500 );
 
   }); 
     }

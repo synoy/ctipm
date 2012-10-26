@@ -86,19 +86,51 @@ GanttMaster.prototype.init = function(place) {
     self.drawTask(task);
 
   }).bind("deleteCurrentTask.gantt", function(e) {
-    var row = self.currentTask.getRow();
+  
+ // alert(self.currentTask.rowElement.find("[name=code]").val());
+  
+  
+ // if (self.currentTask.rowElement.find("[level=level]").val()==0){
+ //  jAlert('Η εργασία δεν μπορεί να διαγραφεί'); 
+ // }
+   
+   jConfirm('<b>Είσαστε Βέβαιοι ότι θέλετε να διαγράψετε την εργασία με Τίτλο :</b>\n"'+self.currentTask.rowElement.find("[name=name]").val()+'" ?', 'Παράθυρο Επιβεβαίωσης', function(r) {
+   if (r){
+  //  jAlert('Confirmed: ' + r, 'Confirmation Results'); 
+       var row = self.currentTask.getRow();
     if (self.currentTask && (row>0 || self.currentTask.isNew())) {
       self.beginTransaction();
-
+      
       self.currentTask.deleteTask();
 
-      self.currentTask = undefined;
+     
+      
+      var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp=new XMLHttpRequest();
+    }
+    else {
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");      
+   }
+
+   xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+ //     document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+  
+    }
+  }    
+xmlhttp.open("GET","deletetask.php?id="+self.currentTask.rowElement.find("[name=code]").val(),true);
+xmlhttp.send();
+
+     self.currentTask = undefined;
+
       //recompute depends string
       self.updateDependsStrings();
 
       //redraw
       self.redraw();
-
+      
+      
       //focus next row
       row = row > self.tasks.length - 1 ? self.tasks.length - 1 : row;
       if (row >= 0) {
@@ -109,6 +141,11 @@ GanttMaster.prototype.init = function(place) {
       self.endTransaction();
     }
 
+    }
+   });
+   
+   
+    
 
   }).bind("addAboveCurrentTask.gantt", function() {
     self.beginTransaction();

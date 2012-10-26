@@ -218,16 +218,36 @@ TH a {
   text-align: center
 }
 
+.button1 {
+  display:inline-block;
+  font-size:100%;
+  font-family:Arial, sans-serif;
+  color:#fff;
+  cursor:pointer;
+  background-color:#7474D3;
+   -moz-box-shadow:2px 2px 2px #999;
+   -webkit-box-shadow:2px 2px 2px #999;
+   -o-box-shadow:2px 2px 2px #999;
+   box-shadow:2px 2px 2px #999;
+   -moz-border-radius:28px;
+   -webkit-border-radius:28px;
+   -o-border-radius:28px;
+   border-radius:28px;
+   border:none;
+   padding:7px 10px;
+   margin-bottom:10px;
+   margin-right:10px;
+  text-align: center
+}
 
 .button.first {
     background-color:#FEA730;
     font-weight: bold;
 }
+
 .button.first:hover {
     background-color:#D98E2A;
 }
-
-
 
 .button[disabled] {
   cursor: default;

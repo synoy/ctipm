@@ -177,7 +177,7 @@
 }
 
 .ganttButtonBar .buttons {
-    float:left; margin:45px 0 0 40px
+    float:left; margin: 26px 0 0 13px /*45px 0 0 40px orizei ta orio toy menou me ta koumpia sto panw meros*/
 }
 
 
@@ -220,7 +220,7 @@
 }
 
 .taskBox .layout .milestone{
-  top:0px;
+  top:5px;
   position:absolute;
   width:18px;
   background: url(milestone.png) no-repeat;
