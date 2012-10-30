@@ -257,14 +257,13 @@
   height:28px;
   color:black;
   text-align:right;
-  padding-right:5px;
+  padding-right: 0px; /*5px;*/
   overflow:hidden;
   left:-200px;
   width:195px;
   white-space:nowrap;
   font-size: 10px;
 }
-
 
 .taskDepLine {
   border: 1px solid #9999ff;

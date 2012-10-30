@@ -148,7 +148,7 @@ $(function() {
           .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
           .append("<button onclick='openResourceEditor();' class='button'>edit resources</button>")
       //    .append("<button onclick='getFile();' class='button'>Εξαγωγή αποτελεσμάτων</button>")
-          .append("<button onclick='staffmanage();' class='button'>Διαχείρηση Χρηστών</button>")
+          .append("<button onclick='staffmanage();' class='button'>Διαχείριση Χρηστών</button>")
           .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>")
            .append("<button onclick='dok();' class='button1' id='hidr'>Απόκρυψη</button>")
           .append("<button  onclick='dok();' class='button1' id='showr' >Περισσότερες Πληροφορίες</button>")
@@ -369,25 +369,38 @@ function staffmanage() {
   editor.append(inp);
   editor.append(inp1);
   editor.append(inp2);
+  
   <? } ?>
- 
+  
+ // var inp3 = $("<table  cellspacing='1' cellpadding='0' width='100%' id='assigsTable'><h4>Εισαγωγή νέου τεχνικού:</h4><tr><th style='width:100px;'>Όνομα</th><th style='width:70px;'>Ιδιότητα</th><th style='width:30px;' id='addAssig1'><span class='teamworkIcon' style='cursor: pointer'>+</span></th></tr></table>");
+ // editor.append(inp3);
 
-  var sv = $("<div>save</div>").css("float", "right").addClass("button").click(function() {
-    $(this).closest(".resEdit").find("input").each(function() {
-      var el = $(this);
-      var pos = el.attr("pos");
-      ge.staff[pos].name = el.val();
-    });
-    ge.editor.redraw();
-    closeBlackPopup();
-  });
-  editor.append(sv);
+   var inp3 = $("<a style='cursor: pointer' onclick=nge()>Εισαγωγή νέου τεχνικού</a>");
+ editor.append(inp3); 
+  
+
+  //var sv = $("<div>save</div>").css("float", "right").addClass("button").click(function() {
+  //  $(this).closest(".resEdit").find("input").each(function() {
+   //   var el = $(this);
+  //    var pos = el.attr("pos");
+  //    ge.staff[pos].name = el.val();
+  //  });
+  //  ge.editor.redraw();
+  //  closeBlackPopup();
+ // });
+ // editor.append(sv);
+ 
 
   var ndo = createBlackPage(800, 500).append(editor);
 }
-
-
-
+  function nge(){
+  $(".ganttButtonBar div")//.append("<button onclick='clearGantt();' class='button'>Καθαρισμός</button>")
+  .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+  var inp4 = $("<a style='cursor: pointer'>Εισαγωγήee νέου τεχνικού</a>");
+ editor.append(inp4);
+ //alert('adsad');
+}
+  
 //-------------------------------------------  datashow ------------------------------------------------------
 function datashow() {
   var editor = $("<div>");
@@ -414,8 +427,6 @@ function datashow() {
   editor.append(inp3);
   <? } ?>
  
-
-
   var ndo = createBlackPage(900, 500).append(editor);
 }
 
@@ -470,7 +481,8 @@ function saveInLocalStorage() {
 
 </script>
 
-
+   
+  
 <div id="gantEditorTemplates" style="display:none;">
   <div class="__template__" type="GANTBUTTONS"><!--
   <div class="ganttButtonBar">
@@ -551,16 +563,19 @@ function saveInLocalStorage() {
 
   <div class="__template__" type="TASKBAR"><!---
   <div class="taskBox" taskId="(#=obj.id#)" >
-    <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level<2?"#CCDDEE":"#EEFFFF"#); border:(#=obj.level<1?'3px LightSalmon solid;':''#); border-left:(#=obj.full_mes==0?'10px MediumBlue solid;':''#)">  
-        <div class="taskLabel"><tr><tr><font color=(#=obj.full_mes>0?"#006600":"#FFFFFF"#)>(#=obj.progress#)%</font></tr><br><tr><font color="#3300CC">(#=obj.fprogress#)%</font></tr></tr></div>
-      <div class="taskProgress1" style="width:(#=obj.progress>100?100:obj.progress#)%; background-color:(#=obj.progress>100?'red':'rgb(153,255,51);'#);"></div>
+    <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level==0?"#808080":(obj.level==1?"#A9A9A9":(((obj.level==2)&&(obj.full_mes==0))?"#ADD8E6":"#b4f3b4"))#);">  
+        <div class="taskLabel"><tr><tr><font color=(#=obj.full_mes>0?"#006600":"#FFFFFF"#)>((#=obj.now_mes#)/(#=obj.full_mes#)) (#=obj.progress#)%</font></tr><br><tr><font color="#3300CC">((#=obj.fnow_mes#)/(#=obj.ffull_mes#)) (#=obj.fprogress#)%</font></tr></tr></div>
+      <div class="taskProgress1" style="width:(#=obj.progress>100?100:obj.progress#)%; background-color:(#=obj.progress>100?'red':'rgb(32, 255, 0);'#);"></div>
      <div class="taskProgress"  style="width:(#=obj.fprogress>100?100:obj.fprogress#)%; background-color:(#=obj.fprogress>100?'red':'rgb(53,155,251);'#);"></div>
+
       <div class="milestone (#=obj.startIsMilestone?'active':''#)" ></div>
       <div class="milestone end (#=obj.endIsMilestone?'active':''#)" ></div>
+      
     </div>
+
   </div>
 --> </div>
-
+  <!-- 0 ta perigramata den mas aresoun ta afairesame <div class="layout (#=obj.hasExternalDep?'extDep':''#)" style="background-color:(#=obj.level==0?"#CCDDEE":(obj.level==1?"#0000EE":(obj.level==2?"#CC0000":"#EEFFFF"))#); border:(#=obj.level<1?'3px LightSalmon solid;':''#); border-left:(#=obj.full_mes==0?'10px MediumBlue solid;':''#)">  -->
   <!--- 1 <div class="taskStatus" status="(#=obj.status#)"></div> htan sto Taskbar gia na fainetai i katastasi tis ergasias-->
   <!--- 2 an 8elw na emfanizetai to pososto vazw (#=obj.progress#)% meta to div -->
 
