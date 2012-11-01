@@ -26,7 +26,7 @@ $status = $_GET["status"];
 $progress = $_GET["progress"];
 $fprogress = $_GET["fprogress"];
 $duration = $_GET["duration"];
-$dependence = $_GET["dependence"];
+$depends = $_GET["depends"];
 $level = $_GET["level"];
 $starti = $_GET["starti"];
 $endi = $_GET["endi"];
@@ -69,7 +69,7 @@ $progress = (1-(($full_mes-$now_mes)/$full_mes))*100;
    
    
    //ginete to update me ta nea dedomena
-    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , fprogress ="'.$fprogress.'" , duration="'.$duration.'", depends="'.$dependence.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'",full_mes="'.$full_mes.'",now_mes="'.$now_mes.'",ffull_mes="'.$ffull_mes.'",fnow_mes="'.$fnow_mes.'" WHERE id='.$id.' ';
+    $quer ='UPDATE tasks SET name = "'.$name.'" , description ="'.$description.'" , progress ="'.$progress.'" , fprogress ="'.$fprogress.'" , duration="'.$duration.'", depends="'.$depends.'", start="'.$start.'", end="'.$end.'", level="'.$level.'",startIsMilestone="'.$startIsMilestone.'",endIsMilestone="'.$endIsMilestone.'",full_mes="'.$full_mes.'",now_mes="'.$now_mes.'",ffull_mes="'.$ffull_mes.'",fnow_mes="'.$fnow_mes.'" WHERE id='.$id.' ';
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
    

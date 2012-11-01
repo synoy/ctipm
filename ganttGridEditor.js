@@ -361,15 +361,28 @@ taskRow.find(".edit").click(function() {
   taskEditor.find("#level").val(task.level);
   taskEditor.find("#depends").val(task.depends);
   
+  
+  var id = 266;
+  
+      $.post("index.php", { js: id=266});  
+ 
+   
+   
+ 
+        
+  
   //An i ergasia einai ergo i paketo ergasiwn tote den 8a mporei na kanei edit sta pososta
   if (task.level<2){
+  
     taskEditor.find("#full_mes").attr("disabled", "disabled");        //enalaktika 8a mporoysan na einai readonly
      taskEditor.find("#now_mes").attr("disabled", "disabled");
-      taskEditor.find("#progress").attr("disabled", "readonly");
+      taskEditor.find("#progress").attr("disabled", "disabled");
       taskEditor.find("#ffull_mes").attr("disabled", "disabled");
      taskEditor.find("#fnow_mes").attr("disabled", "disabled");
       taskEditor.find("#fprogress").attr("disabled", "disabled");
      }
+     
+     
   //make assignments table
   var assigsTable = taskEditor.find("#assigsTable");
   assigsTable.find("[assigId]").remove();
@@ -383,8 +396,28 @@ taskRow.find(".edit").click(function() {
   if (!self.master.canWrite) {
     taskEditor.find("input,textarea").attr("readOnly", true);
     taskEditor.find("input:checkbox,select").attr("disabled", true);
-  } else {
-
+    
+  } else{
+    //pros8etw dikaiwmata, alliws prepei na simperifer8ei to sistima an exei to dikaiwma CanWriteOnParent
+   if (!self.master.canWriteOnParent) {
+   taskEditor.find("#name").attr("disabled", "disabled");  
+   taskEditor.find("#code").attr("disabled", "disabled");
+   taskEditor.find("#description").attr("disabled", "disabled");
+   taskEditor.find("#status").attr("disabled", "disabled");
+   taskEditor.find("#duration").attr("disabled", "disabled");
+   taskEditor.find("#depends").attr("disabled", "disabled");
+   taskEditor.find("#id").attr("disabled", "disabled");  
+   taskEditor.find("#code").attr("disabled", "disabled");
+   taskEditor.find("#level").attr("disabled", "disabled");
+   taskEditor.find("#start").attr("disabled", "disabled");
+   taskEditor.find("#end").attr("disabled", "disabled");
+   taskEditor.find("#progress").attr("disabled", "disabled");
+   taskEditor.find("#fprogress").attr("disabled", "disabled");
+   taskEditor.find("#startIsMilestone").attr("disabled", "disabled");
+   taskEditor.find("#endIsMilestone").attr("disabled", "disabled");
+      }
+  
+  
     //bind dateField on dates
     taskEditor.find("#start").click(function() {
       $(this).dateField({
@@ -436,6 +469,7 @@ taskRow.find(".edit").click(function() {
      taskEditor.find("#fprogress").val((1-((taskEditor.find("#ffull_mes").val()-taskEditor.find("#fnow_mes").val())/taskEditor.find("#ffull_mes").val()))*100);
      });
 
+     // Na koitakse edw otan xreiastei na allaksw tin morfi me tin opoia apo8ikeyetai by default to id !!!
     //bind add assignment
     taskEditor.find("#addAssig").click(function() {
       var assigsTable = taskEditor.find("#assigsTable");
@@ -470,12 +504,13 @@ taskRow.find(".edit").click(function() {
       task.description = taskEditor.find("#description").val();
       task.code = taskEditor.find("#code").val();
       task.progress = parseFloat(taskEditor.find("#progress").val());
-       task.fprogress = parseFloat(taskEditor.find("#fprogress").val());
+      task.fprogress = parseFloat(taskEditor.find("#fprogress").val());
       task.full_mes = parseFloat(taskEditor.find("#full_mes").val());    // mporei kai na 8elei float
       task.now_mes = parseFloat(taskEditor.find("#now_mes").val());
       task.ffull_mes = parseFloat(taskEditor.find("#ffull_mes").val());    // mporei kai na 8elei float
       task.fnow_mes = parseFloat(taskEditor.find("#fnow_mes").val());
       task.duration = parseInt(taskEditor.find("#duration").val());
+      task.depends = parseInt(taskEditor.find("#depends").val());
       task.startIsMilestone = taskEditor.find("#startIsMilestone").is(":checked");
       task.endIsMilestone = taskEditor.find("#endIsMilestone").is(":checked");  
 
@@ -535,7 +570,7 @@ taskRow.find(".edit").click(function() {
       }
 
 
-    });
+    }); 
   }
 
   var ndo = createBlackPage(800, 550).append(taskEditor);

@@ -6,25 +6,25 @@
 
    mysql_query("SET NAMES utf8");
    
+  session_start();
   $proj = $_GET['proj'];
+  $password = $_POST['password'];
   
-   session_start();
-
-    $license = $_SESSION['license'];
-     $user_id = $_SESSION['user_id'];
-//  $license = $_POST['license'];
-//  $_SESSION['license']  = $_POST['license'];
+    $quera ="select user_id,licenses from staff where password like '$password' ";
+    $resulta = mysql_query($quera);
+    $linea = mysql_fetch_row($resulta);
   
+  $license = $linea[1];
+  $user_id = $linea[0];
+  $_SESSION['license']  = $linea[1];
+  $_SESSION['user_id']  = $linea[0];
 	//return $link;
     $quer1 ="select canwrite,canwriteonparent from licenses where license_id = $license";
     $result1 = mysql_query($quer1);
     $line1  = mysql_fetch_row($result1);
   
-  //   $line1[0] = "false";
-  //   $line1[1] = "false";
-  
   if ($proj=='full'||$proj==null){
-     $quer ="select * from tasks where parent = 0 and readit = 1 and project_id in (select project_id from staff_tasks where user_id = $user_id)";
+     $quer ="select * from tasks where parent = 0 and readit = 1 and project_id in (select project_id from staff_tasks where user_id = $linea[0]) ";
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
@@ -33,7 +33,7 @@ $asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'",
    while ($line=mysql_fetch_row($result)) {
 $asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
-$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].',"cansomewrite":true }';    //:true,"canWriteOnParent":true,"cansomewrite":false }';
+$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].' }';
   }else{
   // if ($proj==null){
  //  $proj=2;
@@ -47,16 +47,7 @@ $asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'",
    while ($line=mysql_fetch_row($result)) {
 $asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":"'.$line[16].'","now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
-//$asd.=',{"id":-2,"name":"coding","code":"asdasdasd","level":1,"status":"STATUS_ACTIVE","start":1346623200000,"duration":10,"end":1347659999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"description":"","progress":0}';
-//$asd.=',{"id":-3,"name":"gant part","code":"","level":2,"status":"STATUS_ACTIVE","start":1346623200000,"duration":2,"end":1346795999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":""}';
-//$asd.=',{"id":-4,"name":"editor part","code":"","level":2,"status":"STATUS_SUSPENDED","start":1346796000000,"duration":4,"end":1347314399999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":"3"}';
-//$asd.=',{"id":-5,"name":"testing","code":"","level":1,"status":"STATUS_SUSPENDED","start":1347832800000,"duration":6,"end":1348523999999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":"2:5","description":"","progress":0}';
-//$asd.=',{"id":-6,"name":"test on safari","code":"","level":2,"status":"STATUS_SUSPENDED","start":1347832800000,"duration":2,"end":1348005599999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":""}';
-//$asd.=',{"id":-7,"name":"test on ie","code":"","level":2,"status":"STATUS_SUSPENDED","start":1348005600000,"duration":3,"end":1348264799999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":"6"}';
-//$asd.=',{"id":-8,"name":"test on chrome","code":"","level":2,"status":"STATUS_SUSPENDED","start":1348005600000,"duration":2,"end":1348178399999,"startIsMilestone":false,"endIsMilestone":false,"assigs":[],"depends":"6"}';
-
-
-$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].',"cansomewrite":'.$line1[1].' }';
+$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].' }';
 }
 ?>
 
@@ -92,7 +83,7 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteO
  <!-- <script src="myajax.js"></script>   Den fainetai na toy leipei -->
 
 </head>
-<body style="background-color: #fff;" onload='ajax_mine(<?print $proj?>)'>
+<body style="background-color: #fff;" >
 
 <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px">
 <!--- <button onclick="loadGanttFromServer();">Μετάβαση σε έργο</button> Den xreiazetai en teli-->
@@ -166,8 +157,8 @@ $(function() {
           .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>")
            .append("<button onclick='dok();' class='button1' id='hidr'>Απόκρυψη</button>")
           .append("<button  onclick='dok();' class='button1' id='showr' >Περισσότερες Πληροφορίες</button>")
-          .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <? $result =  mysql_query('select name, project_id from tasks where parent = 0  and project_id in (select project_id from staff_tasks where user_id = "'.$user_id.'" )'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
-          .append("<select name='project1' class='button' id='propacktask' > <option value=''>Επιλέξτε</option></select> ");
+          .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <?$result =  mysql_query('select name, project_id from tasks where parent = 0 and project_id in (select project_id from staff_tasks where user_id = "'.$user_id.'" )'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
+          .append("<select name='project' class='button' id='propacktask' onclick='packtaskchange();'> <option value=''>Επιλέξτε</option></select> ");
  //  .append("<? $result =  mysql_query('select name, project_id from tasks where parent = 0');   ?> ")
  //  .append(" <option value=''>ΕΠΙΛΕΞΤΕ</option>  ")
  //.append(" <? while ($linew= mysql_fetch_row($result)) {?> ")
@@ -1141,10 +1132,9 @@ function getCurrencyCode(mstrURL)
 		 req.open("GET", strURL, true);
 		 req.send(null);
 	}
- 
+  
  // setTimeout("location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);",100);
- location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);
- 
+ location.replace('index.php?proj='+prosel.options[prosel.selectedIndex].value);				
 } 
 </script> 
 
@@ -1214,13 +1204,13 @@ function dok(){
 
   }); 
     }
-</script>    
+</script>
 
 <script type="text/javascript">
 
 	function ajax_mine(stateID)
 	{
-//		alert(stateID);
+		alert(stateID);
 		$.ajax({
 			type: "POST",
 			url: "datasupplier.php",
@@ -1228,21 +1218,22 @@ function dok(){
 			data: {stateID:stateID},
      		success: function(data)
 				{
-		//			console.log("debug!");
-	//				alert(data);
+					console.log("debug!");
+					alert(data);
 					//$('#secondselect').append('<option value="" selected="selected">Select YpoTask</option>');
 					
-					$("#propacktask option[value='secondmaker']").remove();
+					$("#secondselect option[value='secondmaker']").remove();
 					
 					for (var i=1; i<data.length; i+=2) {
 						//console.log(data[i]);
-						$('#propacktask').append('<option value="secondmaker">'+data[i]+'</option>');
+						$('#secondselect').append('<option value="secondmaker">'+data[i]+'</option>');
 					}
 					
 				}, error:function(data,msg,xhr) {console.log(data); console.log(msg); console.log(xhr);}
 			});
 	}
-</script> 
+</script>
+
 
 </body>
 </html>          

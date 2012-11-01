@@ -241,6 +241,7 @@
 .taskBox .taskProgress{
   height:5px;
   position:absolute;
+  margin-top:7px; /* to pros8esa gia na emfanizetai ligo pio katw i mpara twn oikonomikwn */
 }
 
 .taskProgress1{      /* gia na emfanizetai kai deyteri mpara */
