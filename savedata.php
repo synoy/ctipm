@@ -17,7 +17,8 @@ $db = 'gantt';
    mysql_query("SET NAMES utf8");
    }
 	//return $link;
-
+     session_start();
+$user_id = $_SESSION['user_id'];
 $id = $_GET["id"];  
 $name = $_GET["name"];
 $code = $_GET["code"];
@@ -49,6 +50,22 @@ $fnow_mes = $_GET["fnow_mes"];
    
 
    if ($id) {
+   
+    // ta tria ayta erwtimata ginontai prokeimenou na kratame tin istoria twn allagwn stis ergasies
+    $quers ='select name,code,level,status,start,duration,end,startIsMilestone,endIsMilestone,depends,description,progress,assigs,project_id,parent,full_mes,now_mes,fprogress,ffull_mes,fnow_mes,readit from tasks where id='.$id.' ';
+    $results = mysql_query($quers);
+    $lines = mysql_fetch_row($results);
+    
+    $quersd ='select max(aukswn) from oldtasks where id='.$id.' ';
+    $resultsd = mysql_query($quersd);
+    $linesd = mysql_fetch_row($resultsd);
+
+     
+     $quersf ="INSERT INTO old_tasks (task_id,aukswn,name,code,level,status,start,duration,end,startIsMilestone,endIsMilestone,depends,description,progress,assigs,project_id,parent,full_mes,now_mes,fprogress,ffull_mes,fnow_mes,readit,staff_name) VALUES ('$id','$linesd[0]+1','$lines[0]','$lines[1]','$lines[2]','$lines[3]','$lines[4]','$lines[5]','$lines[6]','$lines[7]','$lines[8]','$lines[9]','$lines[10]','$lines[11]','$lines[12]','$lines[13]','$lines[14]','$lines[15]','$lines[16]','$lines[17]','$lines[18]','$lines[19]','$lines[20]','$user_id')";
+     $resultsf = mysql_query($quersf);
+     $linesf = mysql_fetch_row($resultsf);
+
+   
    
    // 8elw na dw ti progress eixe arxika i ergasia (prin to update)
     $querw ='select progress,level,fprogress,now_mes from tasks where id='.$id.' ';

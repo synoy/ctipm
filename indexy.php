@@ -10,6 +10,7 @@
   $proj = $_GET['proj'];
   $password = $_POST['password'];
   
+  
     $quera ="select user_id,licenses from staff where password like '$password' ";
     $resulta = mysql_query($quera);
     $linea = mysql_fetch_row($resulta);
@@ -158,7 +159,7 @@ $(function() {
            .append("<button onclick='dok();' class='button1' id='hidr'>Απόκρυψη</button>")
           .append("<button  onclick='dok();' class='button1' id='showr' >Περισσότερες Πληροφορίες</button>")
           .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <?$result =  mysql_query('select name, project_id from tasks where parent = 0 and project_id in (select project_id from staff_tasks where user_id = "'.$user_id.'" )'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
-          .append("<select name='project' class='button' id='propacktask' onclick='packtaskchange();'> <option value=''>Επιλέξτε</option></select> ");
+          .append("<select name='project' class='buttonslct' id='propacktask' onclick='packtaskchange();'> <option value=''>Επιλέξτε</option></select> ");
  //  .append("<? $result =  mysql_query('select name, project_id from tasks where parent = 0');   ?> ")
  //  .append(" <option value=''>ΕΠΙΛΕΞΤΕ</option>  ")
  //.append(" <? while ($linew= mysql_fetch_row($result)) {?> ")
@@ -1138,6 +1139,53 @@ function getCurrencyCode(mstrURL)
 } 
 </script> 
 
+<script> 
+function getXMLHTTP() { 
+		var xmlhttp=false;	
+		try{
+			xmlhttp=new XMLHttpRequest();
+		}
+		catch(e)	{		
+			try{			
+				xmlhttp= new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch(e){
+				try{
+				xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+				}
+				catch(e1){
+					xmlhttp=false;
+				}
+			}
+		} 	
+		return xmlhttp;
+	}
+
+  function getCurrencyCode1(packtask)
+{	
+  var 	strURL =  "getpacktask.php?packtask="+packtask+"&project="+<?= $proj;?> ;
+	var req = getXMLHTTP();	
+  
+	if (req) 
+	{
+		req.onreadystatechange = function()
+		{
+			if (req.readyState == 4) 
+			{			
+				if (req.status == 200)
+				{						
+					document.getElementById('ta').value= req.responseText;
+          loadGanttFromServer();  
+           alert(req.responseText);				
+			}				
+		 }			
+		 req.open("GET", strURL, true);
+		 req.send(null);
+	}
+  } 
+  }
+</script> 
+
 <!-- gia na emfanizontai ypodeikseis se pedia poy 8eloun erminia-->
 <script type="text/javascript" language="JavaScript">
 var cX = 0; var cY = 0; var rX = 0; var rY = 0;
@@ -1226,7 +1274,7 @@ function dok(){
 					
 					for (var i=1; i<data.length; i+=2) {
 						//console.log(data[i]);
-						$('#secondselect').append('<option value="secondmaker">'+data[i]+'</option>');
+						$('#secondselect').append('<option value='+data[i+1]+'>'+data[i]+'</option>');
 					}
 					
 				}, error:function(data,msg,xhr) {console.log(data); console.log(msg); console.log(xhr);}

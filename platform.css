@@ -240,6 +240,30 @@ TH a {
   text-align: center
 }
 
+.buttonslct {
+  width:120px;
+  display:inline-block;
+  font-size:110%;
+  font-family:Arial, sans-serif;
+  color:#fff;
+  cursor:pointer;
+  background-color:#373737;
+   -moz-box-shadow:2px 2px 2px #999;
+   -webkit-box-shadow:2px 2px 2px #999;
+   -o-box-shadow:2px 2px 2px #999;
+   box-shadow:2px 2px 2px #999;
+   -moz-border-radius:5px;
+   -webkit-border-radius:5px;
+   -o-border-radius:5px;
+   border-radius:5px;
+   border:none;
+   padding:7px 10px;
+   margin-bottom:10px;
+   margin-right:10px;
+  text-align: center
+}
+
+
 .button.first {
     background-color:#FEA730;
     font-weight: bold;

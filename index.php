@@ -6,14 +6,28 @@
 
    mysql_query("SET NAMES utf8");
    
-  $proj = $_GET['proj'];
   
    session_start();
+     $proj = $_GET['proj'];
+     $packtask = $_GET['packtask'];
+     $password = $_POST['password'];
+                      
+     
+   if ($password){
+    $quera ="select user_id,licenses from staff where password like '$password' ";
+  $resulta = mysql_query($quera);
+  $linea = mysql_fetch_row($resulta);
+  
+  $license = $linea[1];
+  $user_id = $linea[0];
+  $_SESSION['license']  = $linea[1];
+  $_SESSION['user_id']  = $linea[0];
+  }else{
+   $license = $_SESSION['license'];
+   $user_id = $_SESSION['user_id'];
+  }
 
-    $license = $_SESSION['license'];
-     $user_id = $_SESSION['user_id'];
-//  $license = $_POST['license'];
-//  $_SESSION['license']  = $_POST['license'];
+
   
 	//return $link;
     $quer1 ="select canwrite,canwriteonparent from licenses where license_id = $license";
@@ -33,12 +47,15 @@ $asd ='{"tasks":[{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'",
    while ($line=mysql_fetch_row($result)) {
 $asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'.$line[3].',"status":"'.$line[4].'","start":'.$line[5].',"duration":'.$line[6].',"end":'.$line[7].',"startIsMilestone":'.$line[8].',"endIsMilestone":'.$line[9].',"assigs":[],"depends":"'.$line[10].'","description":"'.$line[11].'","progress":"'.$line[12].'","full_mes":'.$line[16].',"now_mes":"'.$line[17].'","fprogress":"'.$line[18].'","ffull_mes":"'.$line[19].'","fnow_mes":"'.$line[20].'"}';
    }
-$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].',"cansomewrite":true }';    //:true,"canWriteOnParent":true,"cansomewrite":false }';
+$asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].' }';    //:true,"canWriteOnParent":true,"cansomewrite":false }';
   }else{
   // if ($proj==null){
  //  $proj=2;
  //  }
-    $quer ="select * from tasks where project_id = $proj and readit = 1";
+    $quer ="select * from tasks where project_id = $proj and readit = 1 "; 
+    if ($packtask){
+    $quer.="and id = $packtask or parent = $packtask";
+    }
     $result = mysql_query($quer);
     $line = mysql_fetch_row($result);
     
@@ -58,6 +75,8 @@ $asd.=',{"id":'.$line[0].',"name":"'.$line[1].'","code":"'.$line[0].'","level":'
 
 $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteOnParent":'.$line1[1].',"cansomewrite":'.$line1[1].' }';
 }
+
+    
 ?>
 
 <!DOCTYPE HTML>
@@ -127,6 +146,13 @@ $asd.='],"selectedRow":0,"deletedTaskIds":[],"canWrite":'.$line1[0].',"canWriteO
     margin: 5px;
     border: 1px solid #d0d0d0;
   }
+  
+  .resLine1 {
+    width: 23%;     /* dika mou koumpia */
+    padding: 3px;
+    margin: 5px;
+    border: 1px solid #d0d0d0;
+  }
 
   .boxi {
   background-color: #F4F4F4;
@@ -160,14 +186,14 @@ $(function() {
   //inject some buttons (for this demo only)
   $(".ganttButtonBar div")//.append("<button onclick='clearGantt();' class='button'>Καθαρισμός</button>")
           .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
-          .append("<button onclick='openResourceEditor();' class='button'>edit resources</button>")
+          .append("<button onclick='openResourceEditor1();' class='button'>edit resources</button>")
       //    .append("<button onclick='getFile();' class='button'>Εξαγωγή αποτελεσμάτων</button>")
           .append("<button onclick='staffmanage();' class='button'>Διαχείριση Χρηστών</button>")
           .append("<button onclick='savenewdata();' class='button' id='sava' >Εισαγωγή νέων</button>")
            .append("<button onclick='dok();' class='button1' id='hidr'>Απόκρυψη</button>")
           .append("<button  onclick='dok();' class='button1' id='showr' >Περισσότερες Πληροφορίες</button>")
           .append("<select name='project' class='button' id='prosel' onChange='getCurrencyCode(this.value)'> <? $result =  mysql_query('select name, project_id from tasks where parent = 0  and project_id in (select project_id from staff_tasks where user_id = "'.$user_id.'" )'); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<? print $linew[1];?>'><? print $linew[0]; ?></option><? } ?><option value='full'>Σύνοψη Έργων</option></select> ")
-          .append("<select name='project1' class='button' id='propacktask' > <option value=''>Επιλέξτε</option></select> ");
+          .append("<select name='project1' class='buttonslct' id='propacktask' onChange='getCurrencyCode1(this.value)'> <option value=''>Επιλέξτε</option></select> ");
  //  .append("<? $result =  mysql_query('select name, project_id from tasks where parent = 0');   ?> ")
  //  .append(" <option value=''>ΕΠΙΛΕΞΤΕ</option>  ")
  //.append(" <? while ($linew= mysql_fetch_row($result)) {?> ")
@@ -329,7 +355,6 @@ function loadI18n() {
     "CANNOT_DEPENDS_ON_DESCENDANTS":"CANNOT_DEPENDS_ON_DESCENDANTS",
     "INVALID_DATE_FORMAT":"INVALID_DATE_FORMAT",
     "TASK_MOVE_INCONSISTENT_LEVEL":"TASK_MOVE_INCONSISTENT_LEVEL",
-
     "GANT_QUARTER_SHORT":"trim.",
     "GANT_SEMESTER_SHORT":"sem."
   };
@@ -375,24 +400,37 @@ function staffmanage() {
    
    var m1 = '<?print $line[0];?>'
    var m2 = '<?print $line[1];?>'
-   var m3 = '<?print $line[2];?>'
+   var m3 = '<?print $line[3];?>'
 
-  var inp = $("<input type='text'>").addClass("resLine").val(m1);
-  var inp1 = $("<input type='text'>").addClass("resLine").val(m2);
-  var inp2 = $("<input type='text'>").addClass("resLine").val(m3);
-  editor.append(inp);
+  var inp = $("<input type='text' readonly='readonly'>").addClass("resLine1").val(m1);
+  var inp1 = $("<input type='text' readonly='readonly'>  ").addClass("resLine1").val(m2);
+  var inp2 = $("<input type='text' readonly='readonly'> ").addClass("resLine1").val(m3);
+
+  editor.append(inp); 
   editor.append(inp1);
   editor.append(inp2);
+  editor.append("<img src='images/Plus_sign.png' alt='περισσότερες πληροφορίες' width='30' height='30' style='cursor: pointer' onclick='staff_license("+m1+");'>");
+  editor.append("<br>");
   
+   var m1new = <?= $line[0]+1;?>;
   <? } ?>
   
  // var inp3 = $("<table  cellspacing='1' cellpadding='0' width='100%' id='assigsTable'><h4>Εισαγωγή νέου τεχνικού:</h4><tr><th style='width:100px;'>Όνομα</th><th style='width:70px;'>Ιδιότητα</th><th style='width:30px;' id='addAssig1'><span class='teamworkIcon' style='cursor: pointer'>+</span></th></tr></table>");
  // editor.append(inp3);
 
-   var inp3 = $("<a style='cursor: pointer' onclick=nge()>Εισαγωγή νέου τεχνικού</a>");
- editor.append(inp3); 
-  
+//var inp3 = $("<a style='cursor: pointer' onclick=nge()>Εισαγωγή νέου τεχνικού</a>");
+// editor.append(inp3); 
 
+  editor.append("<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <h3>Εισαγωγή νέου τεχνικού</h3><br>");
+ 
+ var inpnew = $("<input type='text' readonly='readonly' id='user_id' >").addClass("resLine1").val(m1new);
+ editor.append(inpnew);
+ var inp1new = $("<input type='text' id='name' > ").addClass("resLine1");
+ editor.append(inp1new);
+editor.append("<select class='resLine1'id='license' > <? $result =  mysql_query('select license_id,description from licenses '); ?><option value=''>ΕΠΙΛΕΞΤΕ</option><? while ($linew= mysql_fetch_row($result)) {?><option value='<?= $linew[0];?>'><? print $linew[1]; ?></option><? } ?></select> ")
+      
+ editor.append("<br><br>");      
+editor.append(" <button class='button big' onClick='savestaffdata()'' >Αποθήκευση</button></div>");
   //var sv = $("<div>save</div>").css("float", "right").addClass("button").click(function() {
   //  $(this).closest(".resEdit").find("input").each(function() {
    //   var el = $(this);
@@ -405,8 +443,29 @@ function staffmanage() {
  // editor.append(sv);
  
 
-  var ndo = createBlackPage(800, 500).append(editor);
+  var ndo = createBlackPage(900, 500).append(editor);
 }
+
+ 
+function savestaffdata(){
+
+//var xmlhttp;
+
+var user_id = document.getElementById("user_id").value;
+var name = document.getElementById("name").value;  
+var license = document.getElementById("license").value; 
+
+	$.ajax({
+			type: "POST",
+			url: "savestaffdata.php",
+			dataType: "json",
+			data: {user_id:user_id,name:name,license:license},
+			});
+      location.reload();
+
+}
+
+
   function nge(){
   $(".ganttButtonBar div")//.append("<button onclick='clearGantt();' class='button'>Καθαρισμός</button>")
   .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
@@ -745,9 +804,7 @@ function saveInLocalStorage() {
         });
       });
     }
-
-
-  });
+ });
 </script>
 
 <!-- Elegxos tis or8otitas twn timwn> -->
@@ -1075,6 +1132,14 @@ var id = document.getElementById("id").value;
 }
 </script> 
 
+<script type="text/javascript">
+function staff_license(m1){
+   //    alert(m1);
+  window.open('staff_license/index.php?staff_id='+m1,'popuppage', 
+      'width=700,toolbar=1,resizable=1,scrollbars=yes,height=400,top=100,left=100'); 
+}
+</script> 
+
 
 <script type="text/javascript">
 function packtaskchange(){
@@ -1148,6 +1213,57 @@ function getCurrencyCode(mstrURL)
 } 
 </script> 
 
+ <!-- gia na allazoun ta gantt analoga tin epilogi diaforetikwn paketwn ergasias se kapoio ergo-->
+<script> 
+function getXMLHTTP() { 
+		var xmlhttp=false;	
+		try{
+			xmlhttp=new XMLHttpRequest();
+		}
+		catch(e)	{		
+			try{			
+				xmlhttp= new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch(e){
+				try{
+				xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+				}
+				catch(e1){
+					xmlhttp=false;
+				}
+			}
+		} 	
+		return xmlhttp;
+	}
+
+  function getCurrencyCode1(packtask)
+{	
+//alert(packtask);
+  var 	strURL =  "getpacktask.php?packtask="+packtask+"&project="+<?= $proj;?> ;
+	var req1 = getXMLHTTP();	
+  
+	if (req1) 
+	{
+		req1.onreadystatechange = function()
+		{
+			if (req1.readyState == 4) 
+			{			
+				if (req1.status == 200)
+				{						
+					document.getElementById('ta').value= req1.responseText;
+          loadGanttFromServer();  
+           alert(req.responseText);				
+			}				
+		 }			
+		 req.open("GET", strURL, true);
+		 req.send(null);
+	}
+  } 
+  
+   location.replace('index.php?proj='+<?= $proj;?>+'&packtask='+propacktask.options[propacktask.selectedIndex].value);
+  }
+</script> 
+
 <!-- gia na emfanizontai ypodeikseis se pedia poy 8eloun erminia-->
 <script type="text/javascript" language="JavaScript">
 var cX = 0; var cY = 0; var rX = 0; var rY = 0;
@@ -1218,6 +1334,7 @@ function dok(){
 
 <script type="text/javascript">
 
+//gia na fortwnei to deytero drop-down me ta paketa ergasiwn
 	function ajax_mine(stateID)
 	{
 //		alert(stateID);
@@ -1232,17 +1349,37 @@ function dok(){
 	//				alert(data);
 					//$('#secondselect').append('<option value="" selected="selected">Select YpoTask</option>');
 					
-					$("#propacktask option[value='secondmaker']").remove();
+				//	$("#propacktask option[value='secondmaker']").remove();
 					
 					for (var i=1; i<data.length; i+=2) {
 						//console.log(data[i]);
-						$('#propacktask').append('<option value="secondmaker">'+data[i]+'</option>');
+						$('#propacktask').append('<option value='+data[i-1]+'>'+data[i]+'</option>');
 					}
 					
 				}, error:function(data,msg,xhr) {console.log(data); console.log(msg); console.log(xhr);}
 			});
 	}
 </script> 
+
+<script type="text/javascript">
+//gia tin periptwsi pou 8elw pdf, den doulevei opws einai twra
+//!! xreiazetai kai ta arxeia poy vriskontai ston fakelo html2fpdf
+	function openResourceEditor1()
+	{
+    <?
+      require("html2fpdf.php"); 
+    	$htmlFile = "http://localhost/gantt/login.php"; 
+			$buffer = file_get_contents($htmlFile); 
+ 
+			$pdf = new HTML2FPDF('P', 'mm', 'Letter'); 
+			$pdf->AddPage(); 
+			$pdf->WriteHTML($buffer); 
+			$pdf->Output('testo.pdf', 'F'); 	
+      ?>
+      	} 
+</script>
+
+
 
 </body>
 </html>          

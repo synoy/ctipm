@@ -13,7 +13,15 @@ body {background-image:url('205.gif');}
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 */
 include("config.php");
+     
+ session_start();
+$user_id = $_SESSION['user_id'];
+$license = $_SESSION['license'];
 
+  $quera ="select deletefile,downloadfile,uploadfile from licenses where license_id = $license";
+  $resulta = mysql_query($quera);
+  $linea  = mysql_fetch_row($resulta);
+               
 $content_id = $_GET['id'];
 if(isset($_POST['upload']) && $_FILES['userfile']['size'] > 0)
 {
@@ -52,17 +60,23 @@ if(mysql_num_rows($result1)>0)
 {
 	while(list($id, $name) = mysql_fetch_array($result1))
 	{
-	?>  
+	?> <?php if ($linea[1]=="true") { ?> 
 		<a href="download.php?id=<?php echo $id;?>"><?php echo $name;?></a> 
-     <a  href="#" onclick="deletefile(<? print $id?>)" ><img src="trash.gif" border="0" alt="Διαγραφή"></a><br>
+    <? } else { ?>
+    <?php echo $name;
+    }?>
+    <?php if ($linea[0]=="true") {?> 
+     <a  href="#" onclick="deletefile(<? print $id?>)" > <img src="trash.gif" border="0" alt="Διαγραφή"> </a>
+     <?php } ?>
+     <br> 
 	<?php
-	}
+ 	}
 } else {
 print "Δεν υπάρχουν διαθέσιμα αρχεία";
 }
 ?>
 </td></tr>
-
+   <?php if ($linea[2]=="true") {?> 
 <tr><td align="center">
 	<form method="post" enctype="multipart/form-data">
 	<table width="350" border="0" cellpadding="1" cellspacing="1" class="box">
@@ -76,6 +90,7 @@ print "Δεν υπάρχουν διαθέσιμα αρχεία";
 	</table>
 	</form>
 </td></tr>
+   <?php }?> 
 </table>
   
   <script type="text/javascript">
